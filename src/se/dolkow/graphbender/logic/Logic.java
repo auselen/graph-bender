@@ -1,16 +1,21 @@
 package se.dolkow.graphbender.logic;
 
+import java.util.ArrayList;
 import java.util.Random;
+
+import android.util.Pair;
 
 public class Logic {
 	private final Vertex[] vertices;
 	private final boolean[][] connected;
+	private final ArrayList<LogicListener> listeners = new ArrayList<LogicListener>();
 	
 	public Logic(final int nVertices) {
 		vertices = new Vertex[nVertices];
 		connected = new boolean[nVertices][nVertices];
 		for (int i=0; i<nVertices; ++i) {
 			vertices[i] = new Vertex(i);
+			vertices[i].x = 10*i;
 			connected[i][i] = true;
 		}
 		
@@ -38,6 +43,10 @@ public class Logic {
 		}
 	}
 
+	public void addListener(LogicListener ll) {
+		listeners.add(ll);
+	}
+	
 	public int getVertexCount() {
 		return vertices.length;
 	}
@@ -50,8 +59,32 @@ public class Logic {
 		return connected[id1][id2];
 	}
 	
+	public ArrayList<Pair<Vertex,Vertex>> getConnectedPairs() {
+		return getConnectedPairs(new ArrayList<Pair<Vertex,Vertex>>());
+	}
+	
+	public ArrayList<Pair<Vertex,Vertex>> getConnectedPairs(ArrayList<Pair<Vertex, Vertex>> fill) {
+		for (int i=0; i<vertices.length; ++i) {
+			for (int j=0; j<i; ++j) {
+				if (areConnected(i, j)) {
+					fill.add(new Pair<Vertex, Vertex>(getVertex(i), getVertex(j)));
+				}
+			}
+		}
+		return fill;
+	}
+	
 	public void connect(int id1, int id2) {
-		connected[id1][id2] = true;
-		connected[id2][id1] = true;
+		final Vertex v1 = getVertex(id1);
+		final Vertex v2 = getVertex(id2);
+		if (!areConnected(id1, id2) && v1.required > 0 && v2.required > 0) {
+			connected[id1][id2] = true;
+			connected[id2][id1] = true;
+			v1.required -= 1;
+			v2.required -= 1;
+			for (LogicListener ll : listeners) {
+				ll.onConnected(v1, v2);
+			}
+		}
 	}
 }
