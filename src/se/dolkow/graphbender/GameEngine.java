@@ -6,6 +6,7 @@ import se.dolkow.graphbender.logic.Logic;
 import se.dolkow.graphbender.logic.Vertex;
 import se.dolkow.graphbender.scene.Scenery;
 import android.graphics.Canvas;
+import android.graphics.Point;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
@@ -20,10 +21,15 @@ public class GameEngine implements Callback {
 	private GameSurface mGameSurface;
 	private Layout mLayout;
 	private volatile boolean mSurfaceAvailable;
+	private InputHandler mInputHandler;
+	private float mTargetY;
+	private float mTargetX;
 
 	public GameEngine(GameSurface surface) {
 		mGameSurface = surface;
 		mGameSurface.getHolder().addCallback(this);
+		mInputHandler = new InputHandler(this);
+		mGameSurface.register(mInputHandler);
 		createLevel(10);
 		new GraphLoop().start();
 	};
@@ -35,14 +41,35 @@ public class GameEngine implements Callback {
 	}
 
 	public void onTouchEvent(MotionEvent event) {
+		int action = event.getAction(); 
 		float x = event.getX();
 		float y = event.getY();
-		int n = mCurrentLogic.getVertexCount();
-		for (int i = 0; i < n; i++) {
-			Vertex v = mCurrentLogic.getVertex(i);
-			//if (hits(v, x, y)) {
-			//}
+		if (action == MotionEvent.ACTION_DOWN) {
+			int n = mCurrentLogic.getVertexCount();
+			for (int i = 0; i < n; i++) {
+				Vertex v = mCurrentLogic.getVertex(i);
+				if (hits(v, x, y)) {
+					v.selected = true;
+					break;
+				}
+			}
+		} else if ((action == MotionEvent.ACTION_UP)
+				|| (action == MotionEvent.ACTION_CANCEL)) {
+			int n = mCurrentLogic.getVertexCount();
+			for (int i = 0; i < n; i++) {
+				Vertex v = mCurrentLogic.getVertex(i);
+				v.selected = false;
+			}
+		} else if (action == MotionEvent.ACTION_MOVE) {
+			mTargetX = x;
+			mTargetY = y;
 		}
+	}
+
+	private static boolean hits(Vertex v, float x, float y) {
+		float vx = v.x;
+		float vy = v.y;
+		return (Math.abs(vx - x) < 25) && (Math.abs(vy - y) < 25);
 	}
 	
 	class GraphLoop extends Thread {
@@ -53,7 +80,7 @@ public class GameEngine implements Callback {
 				if (mSurfaceAvailable) {
 					SurfaceHolder holder = mGameSurface.getHolder();
 					Canvas c = holder.lockCanvas();
-					mCurrentScenery.draw(c, mCurrentLogic);
+					mCurrentScenery.draw(c, mCurrentLogic, mTargetX, mTargetY);
 					holder.unlockCanvasAndPost(c);
 				}
 				try {

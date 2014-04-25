@@ -4,6 +4,7 @@ public class Vertex {
 	public final int id;
 	public int x, y;
 	int required;
+	public boolean selected;
 	
 	public Vertex(int id) {
 		this.id = id;
