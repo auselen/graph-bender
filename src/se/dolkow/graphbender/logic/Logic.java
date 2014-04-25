@@ -15,7 +15,8 @@ public class Logic {
 		connected = new boolean[nVertices][nVertices];
 		for (int i=0; i<nVertices; ++i) {
 			vertices[i] = new Vertex(i);
-			vertices[i].x = 10*i;
+			vertices[i].x = (int)(100 * (1+Math.cos(i*2*Math.PI / nVertices)));
+			vertices[i].y = (int)(100 * (1+Math.sin(i*2*Math.PI / nVertices)));
 			connected[i][i] = true;
 		}
 		
