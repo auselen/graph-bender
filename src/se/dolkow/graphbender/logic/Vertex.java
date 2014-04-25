@@ -3,6 +3,7 @@ package se.dolkow.graphbender.logic;
 public class Vertex {
 	public final int id;
 	public int x, y;
+	public int targetX, targetY;
 	int required;
 	
 	public Vertex(int id) {

@@ -1,5 +1,7 @@
 package se.dolkow.graphbender;
 
+import se.dolkow.graphbender.animation.Animator;
+import se.dolkow.graphbender.animation.ProportionalAnimator;
 import se.dolkow.graphbender.layout.Layout;
 import se.dolkow.graphbender.layout.RingLayout;
 import se.dolkow.graphbender.logic.Logic;
@@ -19,6 +21,7 @@ public class GameEngine implements Callback {
 	private Scenery mCurrentScenery;
 	private GameSurface mGameSurface;
 	private Layout mLayout;
+	private Animator mAnimator;
 	private volatile boolean mSurfaceAvailable;
 
 	public GameEngine(GameSurface surface) {
@@ -32,6 +35,7 @@ public class GameEngine implements Callback {
 		mCurrentLogic = new Logic(n);
 		mCurrentScenery = new Scenery();
 		mLayout = new RingLayout(mCurrentLogic);
+		mAnimator = new ProportionalAnimator();
 	}
 
 	public void onTouchEvent(MotionEvent event) {
@@ -43,13 +47,14 @@ public class GameEngine implements Callback {
 			//if (hits(v, x, y)) {
 			//}
 		}
+		mLayout.updateDesiredPositions(); // TODO: this is probably not the best place for this. We should make sure that re-layout is done at any time that the logic may have changed.
 	}
 	
 	class GraphLoop extends Thread {
 		@Override
 		public void run() {
 			while (true) {
-				mLayout.updateDesiredPositions();
+				mAnimator.update(mCurrentLogic, System.nanoTime()); // TODO: use Choreographer as time source instead
 				if (mSurfaceAvailable) {
 					SurfaceHolder holder = mGameSurface.getHolder();
 					Canvas c = holder.lockCanvas();
