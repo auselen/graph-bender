@@ -1,10 +1,8 @@
 package se.dolkow.graphbender.layout;
 
-import android.util.Log;
+import static se.dolkow.graphbender.util.Utils.linterp;
 import se.dolkow.graphbender.logic.Logic;
 import se.dolkow.graphbender.logic.Vertex;
-
-import static se.dolkow.graphbender.util.Utils.linterp;
 
 public class PullInRingLayout implements Layout {
 

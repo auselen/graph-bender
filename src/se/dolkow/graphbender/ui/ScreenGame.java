@@ -28,8 +28,7 @@ public class ScreenGame implements Screen {
 	
 	private Logic mCurrentLogic;
 	private Scenery mCurrentScenery;
-	private Layout mLayout;
-	private Layout mLevelInitLayout;
+	private Layout mLayout = new SingularityLayout();
 	private Animator mAnimator;
 	
 	private final Paint timePaint = new Paint();
@@ -45,8 +44,6 @@ public class ScreenGame implements Screen {
 	
 	public ScreenGame(ScreenManager screenManager) {
 		super();
-		mLayout = new PullInRingLayout();
-		mLevelInitLayout = new SingularityLayout();
 		mAnimator = new SpiralAnimator();
 		mCurrentScenery = new Scenery();
 		
@@ -58,8 +55,9 @@ public class ScreenGame implements Screen {
 	public void createLevel(int n) {
 		mCurrentLogic = new Logic(n);
 		mLevelStartTime = System.nanoTime();
-		mLevelInitLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
+		mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 		new NullAnimator().update(mCurrentLogic, 0);
+		mLayout = new PullInRingLayout();
 		mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 	}
 	
@@ -102,6 +100,7 @@ public class ScreenGame implements Screen {
 			if ((selected != -1) && (hovered != -1)) {
 				mCurrentLogic.connect(selected, hovered);
 				if (mCurrentLogic.satisfied()) {
+					mLayout = new SingularityLayout();
 					mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);
 				}
 				mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
