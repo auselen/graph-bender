@@ -47,15 +47,14 @@ public class FirstScenery extends AbstractScenery {
 	
 	public FirstScenery() {
 		Bitmap jelly = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.jellyfish);
-		sprites = new Bitmap[2][6];
+		sprites = new Bitmap[3][6];
 		for (int x = 0; x < 4; x++) {
-			for (int y = 0; y < 2; y++) {
+			for (int y = 0; y < 3; y++) {
 				sprites[y][x] = Bitmap.createBitmap(jelly, x * 96, y * 96, 96, 96);
 			}
 		}
 		sprites[0][4] = sprites[0][2];
 		sprites[0][5] = sprites[0][1];
-		sprites[1][4] = sprites[1][3];
         sprites[1][3] = sprites[1][1];
 		
 		mRegularPaint = new Paint();
@@ -129,8 +128,9 @@ public class FirstScenery extends AbstractScenery {
 		
 		c.drawBitmap(sprites[1][(personality + spriteI) % 4], x - 48, (int) (y - 48 + diff), fishPaint);
 		c.drawBitmap(sprites[0][(personality + spriteI) % 6], x - 48, (int) (y - 48 + diff), fishPaint);
-		c.drawBitmap(sprites[1][4], v.x - 48, v.y - 48 + (int) (diff * 0.7), null);
 		int r = v.getRequired();
+		int eyes = Math.min((r+1)/2, 3);
+		c.drawBitmap(sprites[2][eyes], v.x - 48, v.y - 48 + (int) (diff * 0.7), null);
 		c.drawText(r > 0 ? "" + r : "♥", x - mTextMargin, v.y - Metric.VERTEX_TEXT_SIZE, mTextPaint);
     }
 
