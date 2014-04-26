@@ -12,7 +12,7 @@ import se.dolkow.graphbender.layout.PullInRingLayout;
 import se.dolkow.graphbender.layout.SingularityLayout;
 import se.dolkow.graphbender.logic.Logic;
 import se.dolkow.graphbender.logic.Vertex;
-import se.dolkow.graphbender.scene.Scenery;
+import se.dolkow.graphbender.scene.FirstScenery;
 import se.dolkow.graphbender.util.TextGenerator;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -29,14 +29,14 @@ public class GameScreen implements Screen {
 	private static final int MSG_NEXT_LEVEL        = 2;
 	
 	private Logic mCurrentLogic;
-	private Scenery mCurrentScenery;
+	private FirstScenery mCurrentScenery;
 	private Layout mLayout = new SingularityLayout();
 	private Animator mAnimator;
 	
 	private final Paint timePaint = new Paint();
 	
-	private float mTargetY;
-	private float mTargetX;
+	private int mTargetX;
+	private int mTargetY;
 	private int mLevel = 2;
 	private long mLevelStartTime;
 	private int mHeight;
@@ -49,7 +49,7 @@ public class GameScreen implements Screen {
 	public GameScreen(RenderableManager screenManager) {
 		super();
 		mAnimator = new SpiralAnimator();
-		mCurrentScenery = new Scenery();
+		mCurrentScenery = new FirstScenery();
 		mScreenManager = screenManager;
 		
 		timePaint.setColor(Color.CYAN);
@@ -75,17 +75,15 @@ public class GameScreen implements Screen {
 	@Override
 	public void handleTouch(MotionEvent event) {
 		int action = event.getAction(); 
-		float x = event.getX();
-		float y = event.getY();
+		mTargetX = (int)event.getX();
+		mTargetY = (int)event.getY();
 		if (action == MotionEvent.ACTION_DOWN) {
 			int n = mCurrentLogic.getVertexCount();
 			for (int i = 0; i < n; i++) {
 				Vertex v = mCurrentLogic.getVertex(i);
-				if (hits(v, x, y)) {
+				if (hits(v, mTargetX, mTargetY)) {
 					if (v.required > 0) {
 						v.selected = true;
-						mTargetX = x;
-						mTargetY = y;
 					}
 					break;
 				}
@@ -120,12 +118,10 @@ public class GameScreen implements Screen {
 				mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 			}
 		} else if (action == MotionEvent.ACTION_MOVE) {
-			mTargetX = x;
-			mTargetY = y;
 			int n = mCurrentLogic.getVertexCount();
 			for (int i = 0; i < n; i++) {
 				Vertex v = mCurrentLogic.getVertex(i);
-				if (hits(v, x, y)) {
+				if (hits(v, mTargetX, mTargetY)) {
 					if (v.required > 0)
 						v.hovered = true;
 				} else {
@@ -148,7 +144,7 @@ public class GameScreen implements Screen {
 		mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 	}
 	
-	private static boolean hits(Vertex v, float x, float y) {
+	private static boolean hits(Vertex v, int x, int y) {
 		return (Math.abs(v.x - x) < Metric.FINGER_SIZE) &&
 				(Math.abs(v.y - y) < Metric.FINGER_SIZE);
 	}
