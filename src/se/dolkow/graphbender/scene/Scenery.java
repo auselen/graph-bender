@@ -21,10 +21,8 @@ public class Scenery {
 	private final Paint mConnectedPaint;
 	private Paint mTargetLinePaint;
 	private Random mRand;
-	private static int RADIUS = 25;
 	
 	public Scenery() {
-		RADIUS *= Metric.SCALE;
 		mPaint = new Paint();
 		mPaint.setColor(Color.RED);
 		mTextPaint = new Paint();
@@ -56,7 +54,7 @@ public class Scenery {
 			Vertex v = logic.getVertex(i);
 			if (v.selected)
 				c.drawLine(v.x, v.y, targetX, targetY, mTargetLinePaint);
-			c.drawCircle(v.x + mRand.nextInt(v.required*2+1), v.y + mRand.nextInt(v.required*2+1), RADIUS, v.selected ? mSelectedPaint : v.hovered ? mHoveredPaint : mPaint);
+			c.drawCircle(v.x + mRand.nextInt(v.required*2+1), v.y + mRand.nextInt(v.required*2+1), Metric.VERTEX_RADIUS, v.selected ? mSelectedPaint : v.hovered ? mHoveredPaint : mPaint);
 			c.drawText(""+v.getRequired(), v.x, v.y, mTextPaint);
 		}
 		
