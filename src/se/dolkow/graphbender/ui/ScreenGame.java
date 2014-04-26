@@ -103,6 +103,9 @@ public class ScreenGame implements Screen {
 					mLayout = new SingularityLayout();
 					mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);
 				}
+				if (!mCurrentLogic.satisfiable()) {
+					createLevel(mLevel);
+				}
 				mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 			}
 		} else if (action == MotionEvent.ACTION_MOVE) {
