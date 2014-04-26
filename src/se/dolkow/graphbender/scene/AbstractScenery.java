@@ -11,7 +11,7 @@ public abstract class AbstractScenery implements Scenery {
 	    final int N = logic.getVertexCount();
 	    for (int i=0; i<N; ++i) {
 	    	final Vertex vi = logic.getVertex(i);
-	    	for (int j=0; j<i; ++j) {
+	    	for (int j=i+1; j<N; ++j) {
 	    		if (logic.areConnected(i, j)) {
 	    			drawEdge(c, vi, logic.getVertex(j));
 	    		}
