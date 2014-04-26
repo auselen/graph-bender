@@ -5,7 +5,7 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 
 public class GameSurface extends SurfaceView {
-	private InputHandler inputHandler = InputHandler.getInstance();
+	private InputHandler mInputHandler;
 	
 	public GameSurface(Context context) {
 		super(context);
@@ -13,7 +13,11 @@ public class GameSurface extends SurfaceView {
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		inputHandler.onTouchEvent(event);
+		mInputHandler.onTouchEvent(event);
 		return true;
+	}
+
+	public void register(InputHandler inputHandler) {
+		mInputHandler = inputHandler;
 	}
 }
