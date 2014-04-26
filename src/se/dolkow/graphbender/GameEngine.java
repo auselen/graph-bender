@@ -31,13 +31,14 @@ public class GameEngine implements Callback {
 	private InputHandler mInputHandler;
 	private float mTargetY;
 	private float mTargetX;
+	private int mLevel = 2;
 
 	public GameEngine(GameSurface surface) {
 		mGameSurface = surface;
 		mGameSurface.getHolder().addCallback(this);
 		mInputHandler = new InputHandler(this);
 		mGameSurface.register(mInputHandler);
-		createLevel(10);
+		createLevel(mLevel);
 		new GraphLoop().start();
 	};
 	
@@ -81,6 +82,8 @@ public class GameEngine implements Callback {
 			}
 			if ((selected != -1) && (hovered != -1)) {
 				mCurrentLogic.connect(selected, hovered);
+				if (mCurrentLogic.satisfied())
+					mCurrentLogic = new Logic(++mLevel);
 			}
 		} else if (action == MotionEvent.ACTION_MOVE) {
 			mTargetX = x;

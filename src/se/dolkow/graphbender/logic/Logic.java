@@ -86,4 +86,11 @@ public class Logic {
 			}
 		}
 	}
+
+	public boolean satisfied() {
+		for (int i = 0; i < vertices.length; i++)
+			if (vertices[i].required > 0)
+				return false;
+		return true;
+	}
 }
