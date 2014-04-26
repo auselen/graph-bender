@@ -5,32 +5,27 @@ import se.dolkow.graphbender.R;
 import se.dolkow.graphbender.ui.Background;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Shader;
 
 public class PictureBackground implements Background {
 
-	private Bitmap mBackground;
-	
-	int[] pics = new int[] {R.drawable.pool1};
-	private Paint mPaint;
+	private static Bitmap sOrigBitmap;
+	private static Bitmap sBackground;
 
-	public PictureBackground(int n) {
-		n -= 3;
-		mBackground = BitmapFactory.decodeResource(Globals.sAppResources, pics[n % pics.length]);
-		BitmapShader bitmapShader = new BitmapShader(mBackground, Shader.TileMode.MIRROR, Shader.TileMode.MIRROR);
-		mPaint = new Paint();
-		mPaint.setShader(bitmapShader);
-	}
-	
 	@Override
 	public void draw(Canvas c, long frameTime, long deltaTime) {
-		c.drawPaint(mPaint);
+		c.drawBitmap(sBackground, 0, 0, null);
 	}
 
 	@Override
 	public void sizeChanged(int width, int height) {
+		if (width != 0 && height != 0) {
+			if (sBackground == null || width != sBackground.getWidth() && height != sBackground.getHeight()) {
+				if (sOrigBitmap == null) {
+					sOrigBitmap = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.pool1);
+				}
+				sBackground = Bitmap.createScaledBitmap(sOrigBitmap, width, height, true);
+			}
+		}
 	}
 }

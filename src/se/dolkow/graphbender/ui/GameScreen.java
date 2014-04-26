@@ -67,7 +67,7 @@ public class GameScreen implements Screen {
 		mAnimator = new SpiralAnimator();
 		mLayout = new PullInRingLayout();
 		mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
-		mScreenManager.setBackground(new PictureBackground(n));
+		mScreenManager.setBackground(new PictureBackground());
 	}
 	
 	@Override
