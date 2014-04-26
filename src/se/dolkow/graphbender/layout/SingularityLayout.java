@@ -9,8 +9,8 @@ public class SingularityLayout implements Layout {
     public void updateDesiredPositions(Logic logic, int width, int height) {
 	    final int N = logic.getVertexCount();
 	    for (int i=0; i<N; ++i) {
-			logic.getVertex(i).x = width/2;
-			logic.getVertex(i).y = height/2;
+			logic.getVertex(i).targetX = width/2;
+			logic.getVertex(i).targetY = height/2;
 	    }
     }
 

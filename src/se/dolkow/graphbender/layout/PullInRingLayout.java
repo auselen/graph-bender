@@ -12,10 +12,6 @@ public class PullInRingLayout implements Layout {
 
 	@Override
     public void updateDesiredPositions(Logic logic, final int width, final int height) {
-		Log.i("layout", "Layout w=" + width + " h=" + height);
-		if (width == 0) {
-			throw new RuntimeException("hellO");
-		}
 		final int N = logic.getVertexCount();
 		for (int i=0; i<N; ++i) {
 			final Vertex v = logic.getVertex(i);

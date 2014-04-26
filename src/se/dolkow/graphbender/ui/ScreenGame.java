@@ -1,7 +1,10 @@
 package se.dolkow.graphbender.ui;
 
+import java.lang.ref.WeakReference;
+
 import se.dolkow.graphbender.Metric;
 import se.dolkow.graphbender.animation.Animator;
+import se.dolkow.graphbender.animation.NullAnimator;
 import se.dolkow.graphbender.animation.SpiralAnimator;
 import se.dolkow.graphbender.layout.Layout;
 import se.dolkow.graphbender.layout.PullInRingLayout;
@@ -12,9 +15,17 @@ import se.dolkow.graphbender.scene.Scenery;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.os.Message;
 import android.view.MotionEvent;
 
 public class ScreenGame implements Screen {
+
+	private static final long LEVEL_CHANGE_DELAY = 1000;
+	
+	private static final int MSG_RESTART_LEVEL     = 1;
+	private static final int MSG_NEXT_LEVEL        = 2;
+	
 	private Logic mCurrentLogic;
 	private Scenery mCurrentScenery;
 	private Layout mLayout;
@@ -29,6 +40,8 @@ public class ScreenGame implements Screen {
 	private long mLevelStartTime;
 	private int mHeight;
 	private int mWidth;
+
+	private GameEngineHandler mHandler = new GameEngineHandler(this);
 	
 	public ScreenGame(ScreenManager screenManager) {
 		super();
@@ -42,11 +55,12 @@ public class ScreenGame implements Screen {
 		
 		createLevel(mLevel);
 	}
-	
 	public void createLevel(int n) {
 		mCurrentLogic = new Logic(n);
 		mLevelStartTime = System.nanoTime();
 		mLevelInitLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
+		new NullAnimator().update(mCurrentLogic, 0);
+		mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 	}
 	
 	public void update(long frameTime, long timeDeltaNano) {
@@ -88,7 +102,7 @@ public class ScreenGame implements Screen {
 			if ((selected != -1) && (hovered != -1)) {
 				mCurrentLogic.connect(selected, hovered);
 				if (mCurrentLogic.satisfied()) {
-					createLevel(++mLevel);
+					mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);
 				}
 				mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 			}
@@ -125,4 +139,32 @@ public class ScreenGame implements Screen {
 		return (Math.abs(v.x - x) < Metric.FINGER_SIZE) &&
 				(Math.abs(v.y - y) < Metric.FINGER_SIZE);
 	}
+	
+	public static class GameEngineHandler extends Handler {
+		private final WeakReference<ScreenGame> weakGame;
+		
+		public GameEngineHandler(ScreenGame game) {
+			weakGame = new WeakReference<ScreenGame>(game);
+		}
+		
+		@Override
+		public void handleMessage(Message msg) {
+			ScreenGame game = weakGame.get();
+			if (game == null) {
+				return;
+			}
+		    switch(msg.what) {
+		    	case MSG_NEXT_LEVEL:
+		    		removeCallbacksAndMessages(null);
+		    		game.createLevel(++game.mLevel);
+		    		break;
+		    	case MSG_RESTART_LEVEL:
+		    		removeCallbacksAndMessages(null);
+		    		game.createLevel(game.mLevel);
+		    		break;
+		    	default:
+		    		throw new RuntimeException("Unhandled msg.what: " + msg.what);
+		    }
+		}
+    }
 }
