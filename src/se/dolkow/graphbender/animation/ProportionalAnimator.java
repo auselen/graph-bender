@@ -4,7 +4,7 @@ import se.dolkow.graphbender.logic.Vertex;
 
 public class ProportionalAnimator extends AbstractAnimator {
 
-	private static final double SPEED = 1;
+	private static final double SPEED = 1.5;
 	
 	@Override
     protected void updateVertex(Vertex v, double timeDiff) {

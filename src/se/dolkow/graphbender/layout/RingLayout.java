@@ -21,8 +21,8 @@ public class RingLayout implements Layout {
 		final int h = (mHeight - 2*MARGIN) / 2;
 		for (int i=0; i<N; ++i) {
 			final Vertex v = mLogic.getVertex(i);
-			v.x = MARGIN + (int)(w * (1+Math.cos(i*2*Math.PI / N)));
-			v.y = MARGIN + (int)(h * (1+Math.sin(i*2*Math.PI / N)));
+			v.targetX = MARGIN + (int)(w * (1+Math.cos(i*2*Math.PI / N)));
+			v.targetY = MARGIN + (int)(h * (1+Math.sin(i*2*Math.PI / N)));
 		}
     }
 
