@@ -4,8 +4,8 @@ import java.lang.ref.WeakReference;
 
 import se.dolkow.graphbender.Metric;
 import se.dolkow.graphbender.animation.Animator;
-import se.dolkow.graphbender.animation.ScrollAwayAnimator;
 import se.dolkow.graphbender.animation.NullAnimator;
+import se.dolkow.graphbender.animation.ScrollAwayAnimator;
 import se.dolkow.graphbender.animation.SpiralAnimator;
 import se.dolkow.graphbender.layout.Layout;
 import se.dolkow.graphbender.layout.PullInRingLayout;
@@ -16,7 +16,6 @@ import se.dolkow.graphbender.scene.FirstScenery;
 import se.dolkow.graphbender.scene.backgrounds.ColorBackground;
 import se.dolkow.graphbender.scene.backgrounds.PictureBackground;
 import se.dolkow.graphbender.util.TextGenerator;
-import android.app.Application;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -68,7 +67,7 @@ public class GameScreen implements Screen {
 		mAnimator = new SpiralAnimator();
 		mLayout = new PullInRingLayout();
 		mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
-		if (Math.random() > 0.3) {
+		if (Math.random() > 0.99) {
 			mScreenManager.setBackground(new ColorBackground((int)(0xffffff * Math.random())));
 		} else {
 			mScreenManager.setBackground(new PictureBackground());
