@@ -14,6 +14,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.view.Choreographer;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
@@ -35,6 +38,9 @@ public class GameEngine implements Callback {
 	private int mLevel = 2;
 	private int mWidth;
 	private int mHeight;
+	private long mLevelStartTime;
+	private final Choreographer choreographer;
+	private final FrameCallback frameCallback;
 
 	public GameEngine(GameSurface surface) {
 		mGameSurface = surface;
@@ -42,7 +48,10 @@ public class GameEngine implements Callback {
 		mInputHandler = new InputHandler(this);
 		mGameSurface.register(mInputHandler);
 		createLevel(mLevel);
-		new GraphLoop().start();
+		
+		frameCallback = new FrameCallback();
+		choreographer = Choreographer.getInstance();
+		requestFrame();
 	};
 
 	public void createLevel(int n) {
@@ -50,6 +59,7 @@ public class GameEngine implements Callback {
 		mCurrentScenery = new Scenery();
 		mLayout = new PullInRingLayout();
 		mAnimator = new SpiralAnimator();
+		mLevelStartTime = System.nanoTime();
 	}
 
 	public void onTouchEvent(MotionEvent event) {
@@ -71,7 +81,7 @@ public class GameEngine implements Callback {
 			}
 		} else if ((action == MotionEvent.ACTION_UP)
 				|| (action == MotionEvent.ACTION_CANCEL)) {
-			int n = mCurrentLogic.getVertexCount();
+			final int n = mCurrentLogic.getVertexCount();
 			int selected = -1;
 			int hovered = -1;
 			for (int i = 0; i < n; i++) {
@@ -85,8 +95,9 @@ public class GameEngine implements Callback {
 			}
 			if ((selected != -1) && (hovered != -1)) {
 				mCurrentLogic.connect(selected, hovered);
-				if (mCurrentLogic.satisfied())
-					mCurrentLogic = new Logic(++mLevel);
+				if (mCurrentLogic.satisfied()) {
+					createLevel(++mLevel);
+				}
 				mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 			}
 		} else if (action == MotionEvent.ACTION_MOVE) {
@@ -109,33 +120,34 @@ public class GameEngine implements Callback {
 		return (Math.abs(v.x - x) < Metric.FINGER_SIZE) &&
 				(Math.abs(v.y - y) < Metric.FINGER_SIZE);
 	}
-
-	class GraphLoop extends Thread {
-		@Override
-		public void run() {
-			Paint timePaint = new Paint();
-			timePaint.setColor(Color.CYAN);
-			timePaint.setTextSize(Metric.TIMESTAMP_SIZE);
-			long startTime = System.nanoTime();
-			while (true) {
-				long time = System.nanoTime();
-				mAnimator.update(mCurrentLogic, time); // TODO: use Choreographer as time source instead
-				if (mSurfaceAvailable) {
-					SurfaceHolder holder = mGameSurface.getHolder();
-					Canvas c = holder.lockCanvas();
-					mCurrentScenery.draw(c, mCurrentLogic, mTargetX, mTargetY);
-					c.drawText("" + (time - startTime), 5, Metric.TIMESTAMP_SIZE, timePaint);
-					holder.unlockCanvasAndPost(c);
-				}
-				try {
-					sleep(16);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
+	
+	private void requestFrame() {
+		choreographer.postFrameCallback(frameCallback);
 	}
 
+	class FrameCallback implements Choreographer.FrameCallback {
+		private final Paint timePaint = new Paint();
+
+		public FrameCallback() {
+			timePaint.setColor(Color.CYAN);
+			timePaint.setTextSize(Metric.TIMESTAMP_SIZE);
+		}
+		
+		@Override
+        public void doFrame(long time) {
+			requestFrame(); // TODO: only do this if animator or scene tells us it's needed -- avoid redrawing unnecessarily.
+			mAnimator.update(mCurrentLogic, time);
+			if (mSurfaceAvailable) {
+				SurfaceHolder holder = mGameSurface.getHolder();
+				Canvas c = holder.lockCanvas();
+				mCurrentScenery.draw(c, mCurrentLogic, mTargetX, mTargetY);
+				c.drawText("" + ((time - mLevelStartTime)/1000000)/1000.0, 5, Metric.TIMESTAMP_SIZE, timePaint);
+				holder.unlockCanvasAndPost(c);
+			}
+        }
+		
+	}
+	
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
