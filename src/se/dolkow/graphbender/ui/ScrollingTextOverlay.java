@@ -5,6 +5,7 @@ import se.dolkow.graphbender.Metric;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 
 public class ScrollingTextOverlay implements Overlay {
 
@@ -20,6 +21,7 @@ public class ScrollingTextOverlay implements Overlay {
 		textPaint.setColor(Color.YELLOW);
 		textPaint.setTextSize(200);
 		textPaint.setAntiAlias(true);
+		textPaint.setTypeface(Typeface.MONOSPACE);
 		textWidth = textPaint.measureText(text);
 		pos = (int) textWidth;
 	}

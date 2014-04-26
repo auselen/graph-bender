@@ -4,6 +4,7 @@ import se.dolkow.graphbender.Metric;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.graphics.Path.Direction;
 
 public class ScalingTextOverlay implements Overlay {
@@ -19,11 +20,12 @@ public class ScalingTextOverlay implements Overlay {
 	
 	public ScalingTextOverlay(String s, boolean direction) {
 		text = s;
-		textPaint.setColor(Color.YELLOW);
+		textPaint.setColor(Color.WHITE);
 		textPaint.setAntiAlias(true);
 		dir = direction;
 		textSize = direction ? 200 : 10;
 		textPaint.setTextSize(textSize);
+		textPaint.setTypeface(Typeface.MONOSPACE);
 		textWidth = textPaint.measureText(text);
 		pos = (int) textWidth;
 	}

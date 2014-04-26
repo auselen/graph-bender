@@ -22,6 +22,7 @@ public class SceneryUtils {
 		for (int i = 0; i < segments; i++) {
 			nx = xs - xw + (rand.nextBoolean() ? -1 : 1) * rand.nextInt(WILDNESS);
 			ny = ys - yw + (rand.nextBoolean() ? -1 : 1) * rand.nextInt(WILDNESS);
+			path.lineTo(nx, ny);
 			xs = nx;
 			ys = ny;
 		}
