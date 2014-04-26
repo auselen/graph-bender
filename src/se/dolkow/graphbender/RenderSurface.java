@@ -4,6 +4,7 @@ import se.dolkow.graphbender.ui.RenderableManager;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
+import android.os.Vibrator;
 import android.view.Choreographer;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -24,6 +25,9 @@ public class RenderSurface extends SurfaceView implements SurfaceHolder.Callback
 		
 		mScreenManager = sman;
 		getHolder().addCallback(this);
+		
+		Vibrator bzzz = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
+		mScreenManager.registerVibrator(bzzz);
 	}	
 	
 	@Override

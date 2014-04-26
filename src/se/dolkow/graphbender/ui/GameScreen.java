@@ -107,6 +107,7 @@ public class GameScreen implements Screen {
 			}
 			if ((selected != -1) && (hovered != -1)) {
 				mCurrentLogic.connect(selected, hovered);
+				mScreenManager.bzzz();
 				if (mCurrentLogic.satisfied()) {
 					mLayout = new SingularityLayout();
 					mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);

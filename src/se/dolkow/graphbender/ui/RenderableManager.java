@@ -3,8 +3,8 @@ package se.dolkow.graphbender.ui;
 import java.util.ArrayList;
 
 import android.graphics.Canvas;
+import android.os.Vibrator;
 import android.view.MotionEvent;
-
 
 public class RenderableManager {
 
@@ -17,6 +17,7 @@ public class RenderableManager {
 	private final ArrayList<Overlay> mOverlays = new ArrayList<Overlay>();
 	private int mHeight;
 	private int mWidth;
+	private Vibrator mVibrator;
 	
 	public RenderableManager() {
 		mTitleScreen = new TitleScreen(this);
@@ -92,6 +93,14 @@ public class RenderableManager {
 		} else {
 			return true;
 		}
+	}
+
+	public void registerVibrator(Vibrator bzzz) {
+		mVibrator = bzzz;
+	}
+
+	public void bzzz() {
+		mVibrator.vibrate(100);
 	}
 	
 }

@@ -1,7 +1,5 @@
 package se.dolkow.graphbender.scene;
 
-import java.util.Random;
-
 import se.dolkow.graphbender.Globals;
 import se.dolkow.graphbender.Metric;
 import se.dolkow.graphbender.R;
