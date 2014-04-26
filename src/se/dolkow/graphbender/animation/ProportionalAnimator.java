@@ -14,12 +14,8 @@ public class ProportionalAnimator extends AbstractAnimator {
 
 	private final int calcMov(double timeDiff, int delta) {
 		int mov = (int)Math.round(SPEED * timeDiff * delta);
-		if (mov == 0 && delta != 0) {
-			if (delta < 0) {
-				mov = -1;
-			} else {
-				mov = 1;
-			}
+		if (mov == 0) {
+			mov = sign(delta);
 		}
 		return mov;
 	}

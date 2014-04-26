@@ -1,7 +1,9 @@
 package se.dolkow.graphbender;
 
 import se.dolkow.graphbender.animation.Animator;
+import se.dolkow.graphbender.animation.ConstantSpeedAnimator;
 import se.dolkow.graphbender.animation.ProportionalAnimator;
+import se.dolkow.graphbender.animation.SpiralAnimator;
 import se.dolkow.graphbender.layout.Layout;
 import se.dolkow.graphbender.layout.RingLayout;
 import se.dolkow.graphbender.logic.Logic;
@@ -41,7 +43,7 @@ public class GameEngine implements Callback {
 		mCurrentLogic = new Logic(n);
 		mCurrentScenery = new Scenery();
 		mLayout = new RingLayout(mCurrentLogic);
-		mAnimator = new ProportionalAnimator();
+		mAnimator = new SpiralAnimator();
 	}
 
 	public void onTouchEvent(MotionEvent event) {

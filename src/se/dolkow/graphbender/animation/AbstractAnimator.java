@@ -28,4 +28,13 @@ public abstract class AbstractAnimator implements Animator {
 	 * @param diff the time diff since last update, in seconds
 	 */
 	protected abstract void updateVertex(Vertex v, double diff);
+
+	protected final int sign(int val) {
+		if (val < 0) {
+			return -1;
+		} else if (val > 0) {
+			return 1;
+		}
+		return 0;
+	}
 }
