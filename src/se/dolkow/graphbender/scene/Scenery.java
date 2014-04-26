@@ -85,7 +85,7 @@ public class Scenery {
 		for (Pair<Vertex, Vertex> pair : pairs) {
 			//c.drawLine(pair.first.x, pair.first.y, pair.second.x, pair.second.y, mConnectedPaint);
 			SceneryUtils.drawlineWithRandomWalk(c, pair.first.x, pair.first.y,
-					pair.second.x, pair.second.y, 50, mConnectedPaint);
+					pair.second.x, pair.second.y, mConnectedPaint);
 		}
 		int n = logic.getVertexCount();
 		for (int i = 0; i < n; i++) {
