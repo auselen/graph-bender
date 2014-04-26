@@ -1,33 +1,29 @@
 package se.dolkow.graphbender.ui;
 
+import static se.dolkow.graphbender.util.Utils.linterp;
+import se.dolkow.graphbender.Metric;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Xfermode;
-import android.util.Log;
 
-import static se.dolkow.graphbender.util.Utils.linterp;
-
-public class FadingTextOverlay implements Overlay {
+public class ScrollingTextOverlay implements Overlay {
 
 	private final String text;
 	private final Paint textPaint = new Paint();
-	private long ttl;
 	private int height;
 	private int width;
 	private final float textWidth;
+	private int pos;
 	
-	public FadingTextOverlay(String s) {
+	public ScrollingTextOverlay(String s) {
 		text = s;
-		ttl = 2000000000;
 		textPaint.setColor(Color.YELLOW);
-		textPaint.setTextSize(100);
+		textPaint.setTextSize(200);
 		textPaint.setAntiAlias(true);
 		textWidth = textPaint.measureText(text);
+		pos = (int) textWidth;
 	}
-	
+
 	@Override
     public void sizeChanged(int w, int h) {
 	    width = w;
@@ -36,14 +32,12 @@ public class FadingTextOverlay implements Overlay {
 
 	@Override
     public void draw(Canvas c, long frameTime, long deltaTime) {
-		textPaint.setAlpha((int)(linterp(0, 255, ttl, 0, 1000000000)));
-		c.drawText(text, (width-textWidth)/2, height/2, textPaint);
+		c.drawText(text, pos, height/2, textPaint);
     }
 
 	@Override
     public boolean update(long frameTime, long deltaTime) {
-	    ttl -= deltaTime;
-	    return ttl > 0;
+	    pos -= 10 * Metric.SCALE;
+	    return pos > -textWidth;
     }
-
 }
