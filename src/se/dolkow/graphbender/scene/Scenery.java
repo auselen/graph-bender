@@ -1,6 +1,7 @@
 package se.dolkow.graphbender.scene;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import se.dolkow.graphbender.Metric;
 import se.dolkow.graphbender.logic.Logic;
@@ -19,6 +20,7 @@ public class Scenery {
 	private final Paint mTextPaint;
 	private final Paint mConnectedPaint;
 	private Paint mTargetLinePaint;
+	private Random mRand;
 	private static int RADIUS = 25;
 	
 	public Scenery() {
@@ -40,6 +42,7 @@ public class Scenery {
 		mConnectedPaint = new Paint();
 		mConnectedPaint.setColor(Color.MAGENTA);
 		mConnectedPaint.setStrokeWidth(7);
+		mRand = new Random();
 	}
 	
 	public void draw(Canvas c, Logic logic, float targetX, float targetY) {
@@ -53,7 +56,7 @@ public class Scenery {
 			Vertex v = logic.getVertex(i);
 			if (v.selected)
 				c.drawLine(v.x, v.y, targetX, targetY, mTargetLinePaint);
-			c.drawCircle(v.x, v.y, RADIUS, v.selected ? mSelectedPaint : v.hovered ? mHoveredPaint : mPaint);
+			c.drawCircle(v.x + mRand.nextInt(v.required*2+1), v.y + mRand.nextInt(v.required*2+1), RADIUS, v.selected ? mSelectedPaint : v.hovered ? mHoveredPaint : mPaint);
 			c.drawText(""+v.getRequired(), v.x, v.y, mTextPaint);
 		}
 		
