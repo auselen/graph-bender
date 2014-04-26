@@ -3,7 +3,9 @@ package se.dolkow.graphbender;
 import android.app.Activity;
 import android.os.Bundle;
 
-public class GraphActivity extends Activity {
+public class GameActivity extends Activity {
+	private static final String TAG = "GameActivity";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
