@@ -30,6 +30,7 @@ public class RenderableManager {
 	
 	public void startGame() {
 		setScreen(mGameScreen);
+		addOverlay(OverlayFactory.getRandom("Connect those dots!"));
 	}
 	
 	public void addOverlay(Overlay ov) {
@@ -69,5 +70,14 @@ public class RenderableManager {
     public void handleTouch(MotionEvent event) {
 	    mActiveScreen.handleTouch(event);
     }
+
+	public boolean backPressed() {
+		if (mActiveScreen == mGameScreen) {
+			mActiveScreen = mTitleScreen;
+			return false;
+		} else {
+			return true;
+		}
+	}
 	
 }
