@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Vibrator;
 import android.view.Choreographer;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -28,7 +29,17 @@ public class RenderSurface extends SurfaceView implements SurfaceHolder.Callback
 		
 		Vibrator bzzz = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 		mScreenManager.registerVibrator(bzzz);
-	}	
+		
+		setFocusable(true);
+		setFocusableInTouchMode(true);
+		requestFocus();
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		mScreenManager.handleKeyDown(keyCode, event);
+		return true;
+	}
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {

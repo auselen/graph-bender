@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.graphics.Canvas;
 import android.os.Vibrator;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 public class RenderableManager {
@@ -101,6 +102,10 @@ public class RenderableManager {
 
 	public void bzzz() {
 		mVibrator.vibrate(100);
+	}
+
+	public void handleKeyDown(int keyCode, KeyEvent event) {
+		mActiveScreen.handleKeyDown(keyCode, event);
 	}
 	
 }

@@ -42,6 +42,11 @@ public class TitleScreen implements Screen {
 		c.drawText(STR_DESC, x, y + 100, mPaintDesc);
 		c.drawText(STR_DESC2, x, y + 100 + 20 * Metric.SCALE, mPaintDesc);
 	}
+	
+	@Override
+	public void handleKeyDown(int keyCode, android.view.KeyEvent event) {
+		mScreenManager.startGame();
+	};
 
 	@Override
 	public void handleTouch(MotionEvent event) {

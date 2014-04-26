@@ -21,6 +21,8 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 public class GameScreen implements Screen {
@@ -29,6 +31,8 @@ public class GameScreen implements Screen {
 	
 	private static final int MSG_RESTART_LEVEL     = 1;
 	private static final int MSG_NEXT_LEVEL        = 2;
+
+	private static final String TAG = "GameScreen";
 	
 	private Logic mCurrentLogic;
 	private FirstScenery mCurrentScenery;
@@ -47,6 +51,8 @@ public class GameScreen implements Screen {
 	private GameEngineHandler mHandler = new GameEngineHandler(this);
 
 	private RenderableManager mScreenManager;
+
+	private int mSelected;
 	
 	public GameScreen(RenderableManager screenManager) {
 		super();
@@ -76,7 +82,50 @@ public class GameScreen implements Screen {
 	}
 
 	@Override
+	public void handleKeyDown(int keyCode, android.view.KeyEvent event) {
+		Log.d(TAG, "key down " + keyCode + " " + event);
+		if (mSelected == -1)
+			mSelected = 0;
+		switch (keyCode) {
+			case KeyEvent.KEYCODE_BUTTON_L1:
+				mCurrentLogic.getVertex(mSelected).selected = false;
+				mSelected--;
+				if (mSelected < 0)
+					mSelected = mCurrentLogic.getVertexCount() - 1;
+				mTargetX = mCurrentLogic.getVertex(mSelected).x;
+				mTargetY = mCurrentLogic.getVertex(mSelected).y;
+				mCurrentLogic.getVertex(mSelected).selected = true;
+				break;
+			case KeyEvent.KEYCODE_BUTTON_R1:
+				mCurrentLogic.getVertex(mSelected).selected = false;
+				mSelected++;
+				if (mSelected == mCurrentLogic.getVertexCount())
+					mSelected = 0;
+				mTargetX = mCurrentLogic.getVertex(mSelected).x;
+				mTargetY = mCurrentLogic.getVertex(mSelected).y;
+				mCurrentLogic.getVertex(mSelected).selected = true;
+				break;
+			case KeyEvent.KEYCODE_DPAD_UP:
+				mTargetY -= 10;
+				break;
+			case KeyEvent.KEYCODE_DPAD_DOWN:
+				mTargetY += 10;
+				break;
+			case KeyEvent.KEYCODE_DPAD_LEFT:
+				mTargetX -= 10;
+				break;
+			case KeyEvent.KEYCODE_DPAD_RIGHT:
+				mTargetX += 10;
+				break;
+			case KeyEvent.KEYCODE_BUTTON_A:
+				check();
+				break;
+		}
+	}
+	
+	@Override
 	public void handleTouch(MotionEvent event) {
+		Log.d(TAG, "event " + event);
 		int action = event.getAction(); 
 		mTargetX = (int)event.getX();
 		mTargetY = (int)event.getY();
@@ -93,34 +142,7 @@ public class GameScreen implements Screen {
 			}
 		} else if ((action == MotionEvent.ACTION_UP)
 				|| (action == MotionEvent.ACTION_CANCEL)) {
-			final int n = mCurrentLogic.getVertexCount();
-			int selected = -1;
-			int hovered = -1;
-			for (int i = 0; i < n; i++) {
-				Vertex v = mCurrentLogic.getVertex(i);
-				if (v.selected)
-					selected = i;
-				if (v.hovered)
-					hovered = i;
-				v.selected = false;
-				v.hovered = false;
-			}
-			if ((selected != -1) && (hovered != -1)) {
-				mCurrentLogic.connect(selected, hovered);
-				mScreenManager.bzzz();
-				if (mCurrentLogic.satisfied()) {
-					mLayout = new SingularityLayout();
-					mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);
-					mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.win()));
-				}
-				if (!mCurrentLogic.satisfiable()) {
-					mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.loose()));
-					mAnimator = new ScrollAwayAnimator();
-					mLayout = new SingularityLayout(); // TODO: could have a nice initial layout for the restarted level..
-					mHandler.sendEmptyMessageDelayed(MSG_RESTART_LEVEL, LEVEL_CHANGE_DELAY);
-				}
-				mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
-			}
+			check();
 		} else if (action == MotionEvent.ACTION_MOVE) {
 			int n = mCurrentLogic.getVertexCount();
 			for (int i = 0; i < n; i++) {
@@ -132,6 +154,38 @@ public class GameScreen implements Screen {
 					v.hovered = false;
 				}
 			}
+		}
+	}
+
+	private void check() {
+		final int n = mCurrentLogic.getVertexCount();
+		int selected = -1;
+		int hovered = -1;
+		for (int i = 0; i < n; i++) {
+			Vertex v = mCurrentLogic.getVertex(i);
+			if (v.selected)
+				selected = i;
+			if (v.hovered)
+				hovered = i;
+			v.selected = false;
+			v.hovered = false;
+		}
+		if ((selected != -1) && (hovered != -1)) {
+			mCurrentLogic.connect(selected, hovered);
+			mScreenManager.bzzz();
+			if (mCurrentLogic.satisfied()) {
+				mLayout = new SingularityLayout();
+				mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);
+				mScreenManager.addOverlay(new ScalingTextOverlay("Level " + mLevel, true, true));
+				mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.win()));
+			}
+			if (!mCurrentLogic.satisfiable()) {
+				mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.loose()));
+				mAnimator = new ScrollAwayAnimator();
+				mLayout = new SingularityLayout(); // TODO: could have a nice initial layout for the restarted level..
+				mHandler.sendEmptyMessageDelayed(MSG_RESTART_LEVEL, LEVEL_CHANGE_DELAY);
+			}
+			mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 		}
 	}
 

@@ -10,13 +10,6 @@ public class SceneryUtils {
 	private static final Random rand = new Random();
 	private static final int WILDNESS = 10;
 	
-	private static Paint[] paints = new Paint[3];
-	{
-		paints[0] = new Paint();
-		paints[0] = new Paint();
-		paints[0] = new Paint();
-	}
-	
 	public static void drawlineWithRandomWalk(Canvas c, int xs, int ys, int xe, int ye, Paint paint) {
 		final int dx = xe-xs;
 		final int dy = ye-ys;

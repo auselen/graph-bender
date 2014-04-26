@@ -17,6 +17,7 @@ public class ScalingTextOverlay implements Overlay {
 	private int pos;
 	private int textSize;
 	private boolean dir;
+	private boolean mBottom;
 	
 	public ScalingTextOverlay(String s, boolean direction) {
 		text = s;
@@ -31,6 +32,11 @@ public class ScalingTextOverlay implements Overlay {
 		pos = (int) textWidth;
 	}
 
+	public ScalingTextOverlay(String s, boolean b, boolean bottomOrTop) {
+		this(s, b);
+		mBottom = bottomOrTop;
+	}
+
 	@Override
     public void sizeChanged(int w, int h) {
 	    width = w;
@@ -39,7 +45,7 @@ public class ScalingTextOverlay implements Overlay {
 
 	@Override
     public void draw(Canvas c, long frameTime, long deltaTime) {
-		c.drawText(text, (width-textWidth)/2, (height - textSize)/2, textPaint);
+		c.drawText(text, (width-textWidth)/2, (height - textSize) / (mBottom ? 1 : 2), textPaint);
     }
 
 	@Override

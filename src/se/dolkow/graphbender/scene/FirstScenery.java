@@ -28,6 +28,7 @@ public class FirstScenery extends AbstractScenery {
 	private final Paint mSelectedPaint;
 	private final Paint mHoveredPaint;
 	private final Paint mTextPaint;
+	private final Paint mTextPinkPaint;
 	private final Paint mConnectedPaint;
 	private Paint mTargetLinePaint;
 	private float mTextMargin;
@@ -68,6 +69,8 @@ public class FirstScenery extends AbstractScenery {
 		mTextPaint.setAntiAlias(true);
 		mTextPaint.setTypeface(Typeface.MONOSPACE);
 		mTextPaint.setShadowLayer(3, 3, 3, Color.BLACK);
+		mTextPinkPaint = new Paint(mTextPaint);
+		mTextPinkPaint.setColor(0xFFFFAADD); // that's pink!
 		mTextMargin = mTextPaint.measureText("0") / 2;
 
 		mSelectedPaint = new Paint();
@@ -131,7 +134,7 @@ public class FirstScenery extends AbstractScenery {
 		c.drawBitmap(sprites[0][(personality + spriteI) % 6], x - 48, (int) (y - 48 + diff), fishPaint);
 		c.drawBitmap(sprites[1][4], v.x - 48, v.y - 48 + (int) (diff * 0.7), null);
 		int r = v.getRequired();
-		c.drawText(r > 0 ? "" + r : "♥", x - mTextMargin, v.y - Metric.VERTEX_TEXT_SIZE, mTextPaint);
+		c.drawText(r > 0 ? "" + r : "♥", x - mTextMargin, v.y - Metric.VERTEX_TEXT_SIZE, r > 0 ? mTextPaint : mTextPinkPaint);
     }
 
 
