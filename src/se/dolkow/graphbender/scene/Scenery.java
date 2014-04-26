@@ -36,7 +36,7 @@ public class Scenery {
 		mTargetLinePaint.setColor(Color.YELLOW);
 		mTargetLinePaint.setStrokeWidth(7);
 		mTargetLinePaint.setStyle(Style.STROKE);
-		mTargetLinePaint.setPathEffect(new DashPathEffect(new float[] {10,20}, 0));
+		//mTargetLinePaint.setPathEffect(new DashPathEffect(new float[] {10,20}, 0));
 		mConnectedPaint = new Paint();
 		mConnectedPaint.setColor(Color.MAGENTA);
 		mConnectedPaint.setStrokeWidth(7);
@@ -53,7 +53,8 @@ public class Scenery {
 		for (int i = 0; i < n; i++) {
 			Vertex v = logic.getVertex(i);
 			if (v.selected)
-				c.drawLine(v.x, v.y, targetX, targetY, mTargetLinePaint);
+				SceneryUtils.drawlineWithRandomWalk(c, v.x, v.y, (int) targetX, (int) targetY, 50, mTargetLinePaint);
+				//c.drawLine(v.x, v.y, targetX, targetY, mTargetLinePaint);
 			c.drawCircle(v.x + mRand.nextInt(v.required*2+1), v.y + mRand.nextInt(v.required*2+1), Metric.VERTEX_RADIUS, v.selected ? mSelectedPaint : v.hovered ? mHoveredPaint : mPaint);
 			c.drawText(""+v.getRequired(), v.x, v.y, mTextPaint);
 		}
