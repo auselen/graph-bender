@@ -1,5 +1,7 @@
 package se.dolkow.graphbender.layout;
 
+import se.dolkow.graphbender.logic.Logic;
+
 
 /**
  * A Layout should set the targetX/targetY fields of a logic's vertices.  
@@ -7,13 +9,10 @@ package se.dolkow.graphbender.layout;
 public interface Layout {
 	/**
 	 * Update target positions of vertices in this layout's vertex objects.
+	 * @param logic 
+	 * @param width drawing area width
+	 * @param height drawing area height
 	 */
-	public void updateDesiredPositions();
+	public void updateDesiredPositions(Logic logic, int width, int height);
 
-	/**
-	 * Tell the layout about the width and height of our drawing area.
-	 * @param width
-	 * @param height
-	 */
-	public void updateBounds(int width, int height);
 }

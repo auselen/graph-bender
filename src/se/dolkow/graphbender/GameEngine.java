@@ -33,6 +33,8 @@ public class GameEngine implements Callback {
 	private float mTargetY;
 	private float mTargetX;
 	private int mLevel = 2;
+	private int mWidth;
+	private int mHeight;
 
 	public GameEngine(GameSurface surface) {
 		mGameSurface = surface;
@@ -46,7 +48,7 @@ public class GameEngine implements Callback {
 	public void createLevel(int n) {
 		mCurrentLogic = new Logic(n);
 		mCurrentScenery = new Scenery();
-		mLayout = new PullInRingLayout(mCurrentLogic);
+		mLayout = new PullInRingLayout();
 		mAnimator = new SpiralAnimator();
 	}
 
@@ -85,6 +87,7 @@ public class GameEngine implements Callback {
 				mCurrentLogic.connect(selected, hovered);
 				if (mCurrentLogic.satisfied())
 					mCurrentLogic = new Logic(++mLevel);
+				mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 			}
 		} else if (action == MotionEvent.ACTION_MOVE) {
 			mTargetX = x;
@@ -100,7 +103,6 @@ public class GameEngine implements Callback {
 				}
 			}
 		}
-		mLayout.updateDesiredPositions(); // TODO: this is probably not the best place for this. We should make sure that re-layout is done at any time that the logic may have changed.
 	}
 
 	private static boolean hits(Vertex v, float x, float y) {
@@ -140,7 +142,9 @@ public class GameEngine implements Callback {
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
-		mLayout.updateBounds(width, height);
+		mWidth = width;
+		mHeight = height;
+		mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 	}
 
 	@Override
