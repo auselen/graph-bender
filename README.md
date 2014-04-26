@@ -1,4 +1,4 @@
 graph-bender
 ============
 
-Graph Bender
+Graph Bender: Heart!

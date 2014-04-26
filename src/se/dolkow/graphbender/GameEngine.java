@@ -55,9 +55,11 @@ public class GameEngine implements Callback {
 			for (int i = 0; i < n; i++) {
 				Vertex v = mCurrentLogic.getVertex(i);
 				if (hits(v, x, y)) {
-					v.selected = true;
-					mTargetX = x;
-					mTargetY = y;
+					if (v.required > 0) {
+						v.selected = true;
+						mTargetX = x;
+						mTargetY = y;
+					}
 					break;
 				}
 			}
@@ -85,7 +87,8 @@ public class GameEngine implements Callback {
 			for (int i = 0; i < n; i++) {
 				Vertex v = mCurrentLogic.getVertex(i);
 				if (hits(v, x, y)) {
-					v.hovered = true;
+					if (v.required > 0)
+						v.hovered = true;
 				} else {
 					v.hovered = false;
 				}
@@ -99,12 +102,13 @@ public class GameEngine implements Callback {
 		float vy = v.y;
 		return (Math.abs(vx - x) < 25) && (Math.abs(vy - y) < 25);
 	}
-	
+
 	class GraphLoop extends Thread {
 		@Override
 		public void run() {
 			while (true) {
-				mAnimator.update(mCurrentLogic, System.nanoTime()); // TODO: use Choreographer as time source instead
+				long time = System.nanoTime();
+				mAnimator.update(mCurrentLogic, time); // TODO: use Choreographer as time source instead
 				if (mSurfaceAvailable) {
 					SurfaceHolder holder = mGameSurface.getHolder();
 					Canvas c = holder.lockCanvas();
@@ -112,7 +116,7 @@ public class GameEngine implements Callback {
 					holder.unlockCanvasAndPost(c);
 				}
 				try {
-					sleep(100);
+					sleep(16);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

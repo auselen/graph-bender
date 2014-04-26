@@ -42,6 +42,10 @@ public class Scenery {
 	
 	public void draw(Canvas c, Logic logic, float targetX, float targetY) {
 		c.drawColor(Color.BLACK);
+		ArrayList<Pair<Vertex, Vertex>> pairs = logic.getConnectedPairs();
+		for (Pair<Vertex, Vertex> pair : pairs) {
+			c.drawLine(pair.first.x, pair.first.y, pair.second.x, pair.second.y, mConnectedPaint);
+		}
 		int n = logic.getVertexCount();
 		for (int i = 0; i < n; i++) {
 			Vertex v = logic.getVertex(i);
@@ -50,9 +54,6 @@ public class Scenery {
 			c.drawCircle(v.x, v.y, RADIUS, v.selected ? mSelectedPaint : v.hovered ? mHoveredPaint : mPaint);
 			c.drawText(""+v.getRequired(), v.x, v.y, mTextPaint);
 		}
-		ArrayList<Pair<Vertex, Vertex>> pairs = logic.getConnectedPairs();
-		for (Pair<Vertex, Vertex> pair : pairs) {
-			c.drawLine(pair.first.x, pair.first.y, pair.second.x, pair.second.y, mConnectedPaint);
-		}
+		
 	}
 }
