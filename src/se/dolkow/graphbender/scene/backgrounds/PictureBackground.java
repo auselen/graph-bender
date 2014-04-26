@@ -31,6 +31,6 @@ public class PictureBackground implements Background {
 	}
 
 	@Override
-    public void sizeChanged(int width, int height) {
-    }
+	public void sizeChanged(int width, int height) {
+	}
 }
