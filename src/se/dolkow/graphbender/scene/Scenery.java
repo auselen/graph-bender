@@ -9,18 +9,21 @@ import android.graphics.Paint;
 public class Scenery {
 	private final Paint mPaint;
 	private final Paint mSelectedPaint;
+	private final Paint mHoveredPaint;
 	private final Paint mTextPaint;
 	private Paint mTargetLinePaint;
 	private static final int RADIUS = 25;
 	
 	public Scenery() {
 		mPaint = new Paint();
-		mPaint.setColor(0xFFFF0000);
+		mPaint.setColor(Color.RED);
 		mTextPaint = new Paint();
-		mTextPaint.setColor(0xFFFFFFFF);
+		mTextPaint.setColor(Color.WHITE);
 		mTextPaint.setTextSize(24);
 		mSelectedPaint = new Paint();
-		mSelectedPaint.setColor(0xFF00FF00);
+		mSelectedPaint.setColor(Color.BLUE);
+		mHoveredPaint = new Paint();
+		mHoveredPaint.setColor(Color.GREEN);
 		mTargetLinePaint = new Paint();
 		mTargetLinePaint.setColor(Color.YELLOW);
 		mTargetLinePaint.setStrokeWidth(7);
@@ -33,7 +36,7 @@ public class Scenery {
 			Vertex v = logic.getVertex(i);
 			if (v.selected)
 				c.drawLine(v.x, v.y, targetX, targetY, mTargetLinePaint);
-			c.drawCircle(v.x, v.y, RADIUS, v.selected ? mSelectedPaint : mPaint);
+			c.drawCircle(v.x, v.y, RADIUS, v.selected ? mSelectedPaint : v.hovered ? mHoveredPaint : mPaint);
 			c.drawText(""+v.getRequired(), v.x, v.y, mTextPaint);
 		}
 	}
