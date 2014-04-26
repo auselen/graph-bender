@@ -10,6 +10,8 @@ import se.dolkow.graphbender.logic.Logic;
 import se.dolkow.graphbender.logic.Vertex;
 import se.dolkow.graphbender.scene.Scenery;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -55,9 +57,11 @@ public class GameEngine implements Callback {
 			for (int i = 0; i < n; i++) {
 				Vertex v = mCurrentLogic.getVertex(i);
 				if (hits(v, x, y)) {
-					v.selected = true;
-					mTargetX = x;
-					mTargetY = y;
+					if (v.required > 0) {
+						v.selected = true;
+						mTargetX = x;
+						mTargetY = y;
+					}
 					break;
 				}
 			}
@@ -85,7 +89,8 @@ public class GameEngine implements Callback {
 			for (int i = 0; i < n; i++) {
 				Vertex v = mCurrentLogic.getVertex(i);
 				if (hits(v, x, y)) {
-					v.hovered = true;
+					if (v.required > 0)
+						v.hovered = true;
 				} else {
 					v.hovered = false;
 				}
@@ -99,20 +104,27 @@ public class GameEngine implements Callback {
 		float vy = v.y;
 		return (Math.abs(vx - x) < 25) && (Math.abs(vy - y) < 25);
 	}
-	
+
 	class GraphLoop extends Thread {
 		@Override
 		public void run() {
+			Paint timePaint = new Paint();
+			timePaint.setColor(Color.CYAN);
+			int textSize = (int) (16 * Metric.SCALE);
+			timePaint.setTextSize(textSize);
+			long startTime = System.nanoTime();
 			while (true) {
-				mAnimator.update(mCurrentLogic, System.nanoTime()); // TODO: use Choreographer as time source instead
+				long time = System.nanoTime();
+				mAnimator.update(mCurrentLogic, time); // TODO: use Choreographer as time source instead
 				if (mSurfaceAvailable) {
 					SurfaceHolder holder = mGameSurface.getHolder();
 					Canvas c = holder.lockCanvas();
 					mCurrentScenery.draw(c, mCurrentLogic, mTargetX, mTargetY);
+					c.drawText("" + (time - startTime), 5, textSize, timePaint);
 					holder.unlockCanvasAndPost(c);
 				}
 				try {
-					sleep(100);
+					sleep(16);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}

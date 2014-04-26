@@ -4,7 +4,7 @@ public class Vertex {
 	public final int id;
 	public int x, y;
 	public int targetX, targetY;
-	int required;
+	public int required;
 	public boolean selected;
 	public boolean hovered;
 	
