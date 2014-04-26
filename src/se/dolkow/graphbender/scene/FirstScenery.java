@@ -51,6 +51,7 @@ public class FirstScenery extends AbstractScenery {
 		mTextPaint.setTextSize(Metric.VERTEX_TEXT_SIZE);
 		mTextPaint.setAntiAlias(true);
 		mTextPaint.setTypeface(Typeface.MONOSPACE);
+		mTextPaint.setShadowLayer(3, 3, 3, Color.BLACK);
 		mTextMargin = mTextPaint.measureText("0") / 2;
 
 		mSelectedPaint = new Paint();
@@ -67,6 +68,7 @@ public class FirstScenery extends AbstractScenery {
 		mTargetLinePaint.setStyle(Style.STROKE);
 		mTargetLinePaint.setAntiAlias(true);
 		mTargetLinePaint.setAlpha(200);
+		mTargetLinePaint.setShadowLayer(3, 3, 3, Color.BLACK);
 		Bitmap lightningBitmap = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.lightning_texture);
 		Shader lightningTextureShader = new BitmapShader(lightningBitmap, TileMode.MIRROR, TileMode.MIRROR);
 		mTargetLinePaint.setShader(lightningTextureShader);
@@ -78,6 +80,7 @@ public class FirstScenery extends AbstractScenery {
 		mConnectedPaint.setShader(lightningTextureShader);
 		mConnectedPaint.setStrokeWidth(7);
 		mConnectedPaint.setAntiAlias(true);
+		mConnectedPaint.setShadowLayer(3, 3, 3, Color.BLACK);
 		mTime = System.currentTimeMillis();
 	}
 

@@ -25,6 +25,7 @@ public class FadingTextOverlay implements Overlay {
 		textPaint.setColor(Color.YELLOW);
 		textPaint.setTextSize(100);
 		textPaint.setAntiAlias(true);
+		textPaint.setShadowLayer(10, 10, 10, Color.BLACK);
 		textPaint.setTypeface(Typeface.MONOSPACE);
 		textWidth = textPaint.measureText(text);
 	}

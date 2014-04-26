@@ -13,6 +13,8 @@ public class SceneryUtils {
 	private static Paint[] paints = new Paint[3];
 	{
 		paints[0] = new Paint();
+		paints[0] = new Paint();
+		paints[0] = new Paint();
 	}
 	
 	public static void drawlineWithRandomWalk(Canvas c, int xs, int ys, int xe, int ye, Paint paint) {

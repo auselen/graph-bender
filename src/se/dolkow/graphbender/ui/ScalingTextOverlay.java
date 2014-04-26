@@ -22,6 +22,7 @@ public class ScalingTextOverlay implements Overlay {
 		text = s;
 		textPaint.setColor(Color.WHITE);
 		textPaint.setAntiAlias(true);
+		textPaint.setShadowLayer(10, 10, 10, Color.BLACK);
 		dir = direction;
 		textSize = direction ? 200 : 10;
 		textPaint.setTextSize(textSize);

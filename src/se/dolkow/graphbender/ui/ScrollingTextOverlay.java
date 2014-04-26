@@ -21,6 +21,7 @@ public class ScrollingTextOverlay implements Overlay {
 		textPaint.setColor(Color.YELLOW);
 		textPaint.setTextSize(200);
 		textPaint.setAntiAlias(true);
+		textPaint.setShadowLayer(10, 10, 10, Color.BLACK);
 		textPaint.setTypeface(Typeface.MONOSPACE);
 		textWidth = textPaint.measureText(text);
 		pos = (int) textWidth;
