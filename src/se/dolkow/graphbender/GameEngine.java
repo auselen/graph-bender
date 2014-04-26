@@ -102,7 +102,8 @@ public class GameEngine implements Callback {
 	private static boolean hits(Vertex v, float x, float y) {
 		float vx = v.x;
 		float vy = v.y;
-		return (Math.abs(vx - x) < 25) && (Math.abs(vy - y) < 25);
+		int rad = (int) (25 * Metric.SCALE);
+		return (Math.abs(vx - x) < rad) && (Math.abs(vy - y) < rad);
 	}
 
 	class GraphLoop extends Thread {
