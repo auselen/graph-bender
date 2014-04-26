@@ -4,6 +4,7 @@ import se.dolkow.graphbender.animation.Animator;
 import se.dolkow.graphbender.animation.SpiralAnimator;
 import se.dolkow.graphbender.layout.Layout;
 import se.dolkow.graphbender.layout.PullInRingLayout;
+import se.dolkow.graphbender.layout.SingularityLayout;
 import se.dolkow.graphbender.logic.Logic;
 import se.dolkow.graphbender.logic.Vertex;
 import se.dolkow.graphbender.scene.Scenery;
@@ -24,6 +25,7 @@ public class GameEngine implements Callback {
 	private Scenery mCurrentScenery;
 	private GameSurface mGameSurface;
 	private Layout mLayout;
+	private Layout mLevelInitLayout;
 	private Animator mAnimator;
 	private volatile boolean mSurfaceAvailable;
 	private InputHandler mInputHandler;
@@ -41,6 +43,12 @@ public class GameEngine implements Callback {
 		mGameSurface.getHolder().addCallback(this);
 		mInputHandler = new InputHandler(this);
 		mGameSurface.register(mInputHandler);
+		
+		mLayout = new PullInRingLayout();
+		mLevelInitLayout = new SingularityLayout();
+		mAnimator = new SpiralAnimator();
+		mCurrentScenery = new Scenery();
+		
 		createLevel(mLevel);
 		
 		frameCallback = new FrameCallback();
@@ -50,10 +58,8 @@ public class GameEngine implements Callback {
 
 	public void createLevel(int n) {
 		mCurrentLogic = new Logic(n);
-		mCurrentScenery = new Scenery();
-		mLayout = new PullInRingLayout();
-		mAnimator = new SpiralAnimator();
 		mLevelStartTime = System.nanoTime();
+		mLevelInitLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 	}
 
 	public void onTouchEvent(MotionEvent event) {
