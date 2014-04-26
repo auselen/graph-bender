@@ -10,6 +10,8 @@ import se.dolkow.graphbender.logic.Logic;
 import se.dolkow.graphbender.logic.Vertex;
 import se.dolkow.graphbender.scene.Scenery;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Point;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -106,6 +108,11 @@ public class GameEngine implements Callback {
 	class GraphLoop extends Thread {
 		@Override
 		public void run() {
+			Paint timePaint = new Paint();
+			timePaint.setColor(Color.CYAN);
+			int textSize = (int) (16 * Metric.SCALE);
+			timePaint.setTextSize(textSize);
+			long startTime = System.nanoTime();
 			while (true) {
 				long time = System.nanoTime();
 				mAnimator.update(mCurrentLogic, time); // TODO: use Choreographer as time source instead
@@ -113,6 +120,7 @@ public class GameEngine implements Callback {
 					SurfaceHolder holder = mGameSurface.getHolder();
 					Canvas c = holder.lockCanvas();
 					mCurrentScenery.draw(c, mCurrentLogic, mTargetX, mTargetY);
+					c.drawText("" + (time - startTime), 5, textSize, timePaint);
 					holder.unlockCanvasAndPost(c);
 				}
 				try {
