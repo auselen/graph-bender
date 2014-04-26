@@ -11,12 +11,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffColorFilter;
-import android.graphics.RadialGradient;
 import android.graphics.Shader;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
@@ -28,21 +24,24 @@ public class FirstScenery extends AbstractScenery {
 	private final Paint mTextPaint;
 	private final Paint mConnectedPaint;
 	private Paint mTargetLinePaint;
-	private Random mRand;
 	private float mTextMargin;
 	private Bitmap[][] sprites;
 	private long mTime;
 	private int spriteI;
 	
 	public FirstScenery() {
-		Bitmap jelly = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.jelly);
-		sprites = new Bitmap[4][3];
-		for (int x = 0; x < 3; x++) {
-			for (int y = 0; y < 4; y++) {
-				sprites[y][x] = Bitmap.createBitmap(jelly, x * 54, y * 54, 54, 54);
+		Bitmap jelly = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.jellyfish);
+		sprites = new Bitmap[2][6];
+		for (int x = 0; x < 4; x++) {
+			for (int y = 0; y < 2; y++) {
+				sprites[y][x] = Bitmap.createBitmap(jelly, x * 96, y * 96, 96, 96);
 			}
 		}
-        
+		sprites[0][4] = sprites[0][2];
+		sprites[0][5] = sprites[0][1];
+		sprites[1][4] = sprites[1][3];
+        sprites[1][3] = sprites[1][1];
+		
 		mRegularPaint = new Paint();
 		mRegularPaint.setColor(Color.RED);
 		mRegularPaint.setAntiAlias(true);
@@ -74,11 +73,11 @@ public class FirstScenery extends AbstractScenery {
 		
 		//mTargetLinePaint.setPathEffect(new DashPathEffect(new float[] {10,20}, 0));
 		mConnectedPaint = new Paint();
-		mConnectedPaint.setColor(Color.MAGENTA);
+		mConnectedPaint.setColor(Color.BLUE);
 		mConnectedPaint.setStyle(Style.STROKE);
+		mConnectedPaint.setShader(lightningTextureShader);
 		mConnectedPaint.setStrokeWidth(7);
 		mConnectedPaint.setAntiAlias(true);
-		mRand = new Random();
 		mTime = System.currentTimeMillis();
 	}
 
@@ -104,9 +103,13 @@ public class FirstScenery extends AbstractScenery {
 			spriteI++;
 			mTime = time;
 		}
-		c.drawBitmap(sprites[0][spriteI % 3], x - 27 , y - 27, null);
+		int personality = v.hashCode() >> 4;
+		double diff = 5 * Math.sin(personality + time * 0.005);
+		c.drawBitmap(sprites[1][(personality + spriteI) % 4], x - 48, (int) (y - 48 + diff), null);
+		c.drawBitmap(sprites[0][(personality + spriteI) % 6], x - 48, (int) (y - 48 + diff), null);
+		c.drawBitmap(sprites[1][4], v.x - 48, v.y - 48 + (int) (diff * 0.7), null);
 		int r = v.getRequired();
-		c.drawText(r > 0 ? "" + r : "✓", x - mTextMargin, y + mTextMargin, mTextPaint);
+		c.drawText(r > 0 ? "" + r : "♥", x - mTextMargin, v.y - Metric.VERTEX_TEXT_SIZE, mTextPaint);
     }
 
 
