@@ -20,7 +20,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.MotionEvent;
 
-public class ScreenGame implements Screen {
+public class GameScreen implements Screen {
 
 	private static final long LEVEL_CHANGE_DELAY = 1000;
 	
@@ -42,11 +42,14 @@ public class ScreenGame implements Screen {
 	private int mWidth;
 
 	private GameEngineHandler mHandler = new GameEngineHandler(this);
+
+	private RenderableManager mScreenManager;
 	
-	public ScreenGame(ScreenManager screenManager) {
+	public GameScreen(RenderableManager screenManager) {
 		super();
 		mAnimator = new SpiralAnimator();
 		mCurrentScenery = new Scenery();
+		mScreenManager = screenManager;
 		
 		timePaint.setColor(Color.CYAN);
 		timePaint.setTextSize(Metric.TIMESTAMP_SIZE);
@@ -63,6 +66,7 @@ public class ScreenGame implements Screen {
 		mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 	}
 	
+	@Override
 	public void update(long frameTime, long timeDeltaNano) {
 		mAnimator.update(mCurrentLogic, timeDeltaNano);
 	}
@@ -106,6 +110,7 @@ public class ScreenGame implements Screen {
 					mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);
 				}
 				if (!mCurrentLogic.satisfiable()) {
+					mScreenManager.addOverlay(new FadingTextOverlay("Booo!"));
 					mAnimator = new ScrollAwayAnimator();
 					mLayout = new SingularityLayout(); // TODO: could have a nice initial layout for the restarted level..
 					mHandler.sendEmptyMessageDelayed(MSG_RESTART_LEVEL, LEVEL_CHANGE_DELAY);
@@ -147,15 +152,15 @@ public class ScreenGame implements Screen {
 	}
 	
 	public static class GameEngineHandler extends Handler {
-		private final WeakReference<ScreenGame> weakGame;
+		private final WeakReference<GameScreen> weakGame;
 		
-		public GameEngineHandler(ScreenGame game) {
-			weakGame = new WeakReference<ScreenGame>(game);
+		public GameEngineHandler(GameScreen game) {
+			weakGame = new WeakReference<GameScreen>(game);
 		}
 		
 		@Override
 		public void handleMessage(Message msg) {
-			ScreenGame game = weakGame.get();
+			GameScreen game = weakGame.get();
 			if (game == null) {
 				return;
 			}

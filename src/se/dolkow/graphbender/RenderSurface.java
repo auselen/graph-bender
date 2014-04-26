@@ -1,7 +1,6 @@
 package se.dolkow.graphbender;
 
-import se.dolkow.graphbender.ui.Screen;
-import se.dolkow.graphbender.ui.ScreenManager;
+import se.dolkow.graphbender.ui.RenderableManager;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -12,15 +11,12 @@ import android.view.SurfaceView;
 
 @SuppressLint("ViewConstructor")
 public class RenderSurface extends SurfaceView implements SurfaceHolder.Callback{
-	private final ScreenManager mScreenManager;
-	private int mHeight;
-	private int mWidth ;
+	private final RenderableManager mScreenManager;
 	private boolean mSurfaceAvailable;
 	private final Choreographer choreographer;
 	private final FrameCallback frameCallback;
-	private boolean mDimensionsChanged;
 
-	public RenderSurface(Context context, ScreenManager sman) {
+	public RenderSurface(Context context, RenderableManager sman) {
 		super(context);
 		
 		choreographer = Choreographer.getInstance();
@@ -32,15 +28,13 @@ public class RenderSurface extends SurfaceView implements SurfaceHolder.Callback
 	
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
-		mScreenManager.getScreen().handleTouch(event);
+		mScreenManager.handleTouch(event);
 		return true;
 	}
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-		mWidth  = width;
-		mHeight = height;
-		mDimensionsChanged = true;
+		mScreenManager.sizeChanged(width, height);
 	}
 
 	@Override
@@ -60,21 +54,14 @@ public class RenderSurface extends SurfaceView implements SurfaceHolder.Callback
 	
 	class FrameCallback implements Choreographer.FrameCallback {
 		long mLastFrameTime = System.nanoTime();
-		Screen mLastScreen = null;
 		@Override
         public void doFrame(final long time) {
 			if (mSurfaceAvailable) {
 				final long delta = time - mLastFrameTime;
-				Screen screen = mScreenManager.getScreen();
-				if (screen != mLastScreen || mDimensionsChanged) {
-					screen.sizeChanged(mWidth, mHeight); // this screen may not have seen the update before
-					mLastScreen = screen;
-					mDimensionsChanged = false;
-				}
-				screen.update(time, delta);
+				mScreenManager.update(time, delta);
 				final SurfaceHolder holder = getHolder();
 				Canvas c = holder.lockCanvas();
-				screen.draw(c, time, delta);
+				mScreenManager.draw(c, time, delta);
 				holder.unlockCanvasAndPost(c);
 				requestFrame(); // TODO: only do this if animator or scene tells us it's needed -- avoid redrawing unnecessarily.
 			}

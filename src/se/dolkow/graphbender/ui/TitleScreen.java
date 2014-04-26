@@ -8,14 +8,14 @@ import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 
-public class ScreenTitle implements Screen {
+public class TitleScreen implements Screen {
 	private Paint mPaintTitle;
-	private final ScreenManager mScreenManager;
+	private final RenderableManager mScreenManager;
 	
 	private static final String STR_TITLE = "graph-bender";
 	private static final String TAG = "ScreenTitle";
 
-	public ScreenTitle(ScreenManager screenManager) {
+	public TitleScreen(RenderableManager screenManager) {
 		Log.d(TAG, "ScreenTitle");
 		mPaintTitle = new Paint();
 		mPaintTitle.setTextSize(Metric.SCALE * 45);
