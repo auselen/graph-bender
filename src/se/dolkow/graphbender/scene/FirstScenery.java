@@ -76,11 +76,6 @@ public class FirstScenery extends AbstractScenery {
 	}
 
 	@Override
-	protected void drawBackground(Canvas c) {
-		c.drawColor(Color.BLACK);
-	}
-
-	@Override
 	protected void drawEdge(Canvas c, Vertex v1, Vertex v2) {
 		SceneryUtils.drawlineWithRandomWalk(c, v1.x, v1.y, v2.x, v2.y, mConnectedPaint);
 	}

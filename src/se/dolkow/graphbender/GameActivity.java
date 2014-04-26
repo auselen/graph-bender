@@ -12,6 +12,9 @@ public class GameActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (Globals.sAppResources == null) {
+			Globals.sAppResources = getApplicationContext().getResources();
+		}
 		Metric.setScale(getResources().getDisplayMetrics().density);
 		mRenderableManager = new RenderableManager();
 		RenderSurface surface = new RenderSurface(this, mRenderableManager);

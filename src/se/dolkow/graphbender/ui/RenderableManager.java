@@ -12,6 +12,7 @@ public class RenderableManager {
 	private final GameScreen mGameScreen;
 	
 	private Screen mActiveScreen;
+	private Background mBackground;
 	
 	private final ArrayList<Overlay> mOverlays = new ArrayList<Overlay>();
 	private int mHeight;
@@ -33,6 +34,11 @@ public class RenderableManager {
 		addOverlay(OverlayFactory.getRandom("Connect those dots!"));
 	}
 	
+	public void setBackground(Background bg) {
+		mBackground = bg;
+		mBackground.sizeChanged(mWidth, mHeight);
+	}
+	
 	public void addOverlay(Overlay ov) {
 		ov.sizeChanged(mWidth, mHeight);
 		mOverlays.add(ov);
@@ -41,6 +47,9 @@ public class RenderableManager {
     public void sizeChanged(int width, int height) {
     	mWidth = width;
     	mHeight = height;
+    	if (mBackground != null) {
+    		mBackground.sizeChanged(width, height);
+    	}
 	    mActiveScreen.sizeChanged(width, height);
 	    final int N = mOverlays.size();
 	    for (int i=0; i<N; ++i) {
@@ -60,6 +69,11 @@ public class RenderableManager {
     }
 
     public void draw(Canvas c, long frameTime, long deltaTime) {
+    	if (mBackground != null) {
+    		mBackground.draw(c, frameTime, deltaTime);
+    	} else {
+    		c.drawColor(0);
+    	}
 		mActiveScreen.draw(c, frameTime, deltaTime);
 	    final int N = mOverlays.size();
 	    for (int i=0; i<N; ++i) {

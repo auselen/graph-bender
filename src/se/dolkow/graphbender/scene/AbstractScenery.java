@@ -8,7 +8,6 @@ public abstract class AbstractScenery implements Scenery {
 
 	@Override
     public void draw(Canvas c, Logic logic, int touchX, int touchY) {
-		drawBackground(c);
 	    final int N = logic.getVertexCount();
 	    for (int i=0; i<N; ++i) {
 	    	final Vertex vi = logic.getVertex(i);
@@ -24,7 +23,6 @@ public abstract class AbstractScenery implements Scenery {
 	    }
     }
 	
-	protected abstract void drawBackground(Canvas c);
 	protected abstract void drawEdge(Canvas c, Vertex v1, Vertex v2);
 	protected abstract void drawTargetLine(Canvas c, Vertex v, int touchX, int touchY);
 	protected abstract void drawVertex(Canvas c, Vertex v);
