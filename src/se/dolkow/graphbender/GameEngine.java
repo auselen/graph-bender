@@ -1,21 +1,15 @@
 package se.dolkow.graphbender;
 
 import se.dolkow.graphbender.animation.Animator;
-import se.dolkow.graphbender.animation.ConstantSpeedAnimator;
-import se.dolkow.graphbender.animation.ProportionalAnimator;
 import se.dolkow.graphbender.animation.SpiralAnimator;
 import se.dolkow.graphbender.layout.Layout;
 import se.dolkow.graphbender.layout.PullInRingLayout;
-import se.dolkow.graphbender.layout.RingLayout;
 import se.dolkow.graphbender.logic.Logic;
 import se.dolkow.graphbender.logic.Vertex;
 import se.dolkow.graphbender.scene.Scenery;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
-import android.os.HandlerThread;
-import android.os.Looper;
 import android.view.Choreographer;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
