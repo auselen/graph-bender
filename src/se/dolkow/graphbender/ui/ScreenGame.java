@@ -4,6 +4,7 @@ import java.lang.ref.WeakReference;
 
 import se.dolkow.graphbender.Metric;
 import se.dolkow.graphbender.animation.Animator;
+import se.dolkow.graphbender.animation.ScrollAwayAnimator;
 import se.dolkow.graphbender.animation.NullAnimator;
 import se.dolkow.graphbender.animation.SpiralAnimator;
 import se.dolkow.graphbender.layout.Layout;
@@ -57,6 +58,7 @@ public class ScreenGame implements Screen {
 		mLevelStartTime = System.nanoTime();
 		mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 		new NullAnimator().update(mCurrentLogic, 0);
+		mAnimator = new SpiralAnimator();
 		mLayout = new PullInRingLayout();
 		mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 	}
@@ -104,7 +106,9 @@ public class ScreenGame implements Screen {
 					mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);
 				}
 				if (!mCurrentLogic.satisfiable()) {
-					createLevel(mLevel);
+					mAnimator = new ScrollAwayAnimator();
+					mLayout = new SingularityLayout(); // TODO: could have a nice initial layout for the restarted level..
+					mHandler.sendEmptyMessageDelayed(MSG_RESTART_LEVEL, LEVEL_CHANGE_DELAY);
 				}
 				mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 			}
