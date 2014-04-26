@@ -17,7 +17,7 @@ public class FadingTextOverlay implements Overlay {
 	private long ttl;
 	private int height;
 	private int width;
-	private final float textWidth;
+	private float textWidth;
 	
 	public FadingTextOverlay(String s) {
 		text = s;
@@ -33,6 +33,10 @@ public class FadingTextOverlay implements Overlay {
     public void sizeChanged(int w, int h) {
 	    width = w;
 	    height = h;
+	    while (textWidth > w) {
+	    	textPaint.setTextSize((textPaint.getTextSize() / 3) * 2); 
+	    	textWidth = textPaint.measureText(text);
+	    }
     }
 
 	@Override

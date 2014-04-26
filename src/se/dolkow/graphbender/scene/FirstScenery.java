@@ -1,6 +1,5 @@
 package se.dolkow.graphbender.scene;
 
-import java.security.spec.MGF1ParameterSpec;
 import java.util.Random;
 
 import se.dolkow.graphbender.Globals;
@@ -9,6 +8,7 @@ import se.dolkow.graphbender.R;
 import se.dolkow.graphbender.logic.Vertex;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -20,8 +20,6 @@ import android.graphics.RadialGradient;
 import android.graphics.Shader;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
-import android.media.JetPlayer;
-import android.os.SystemClock;
 
 public class FirstScenery extends AbstractScenery {
 	private final Paint mRegularPaint;
@@ -44,20 +42,10 @@ public class FirstScenery extends AbstractScenery {
 				sprites[y][x] = Bitmap.createBitmap(jelly, x * 54, y * 54, 54, 54);
 			}
 		}
-
-        RadialGradient circleGradient = new RadialGradient(Metric.VERTEX_RADIUS / 4,
-        		Metric.VERTEX_RADIUS / 4,
-        		Metric.VERTEX_RADIUS / 4, 
-        		new int[] {Color.RED, Color.WHITE, Color.GREEN},
-        		new float[] {0.0f, 0.8f, 1.0f}, 
-        		android.graphics.Shader.TileMode.CLAMP);  
         
-        PorterDuffColorFilter colorFilter = new PorterDuffColorFilter(0xA5FF0000, Mode.SRC_ATOP);
 		mRegularPaint = new Paint();
 		mRegularPaint.setColor(Color.RED);
 		mRegularPaint.setAntiAlias(true);
-		mRegularPaint.setShader(circleGradient);
-		mRegularPaint.setColorFilter(colorFilter);
 		
 		mTextPaint = new Paint();
 		mTextPaint.setColor(Color.WHITE);
@@ -79,9 +67,10 @@ public class FirstScenery extends AbstractScenery {
 		mTargetLinePaint.setStrokeWidth(7);
 		mTargetLinePaint.setStyle(Style.STROKE);
 		mTargetLinePaint.setAntiAlias(true);
-		Shader shader = new LinearGradient(0, 0, 0, 40, Color.WHITE, Color.BLUE, TileMode.CLAMP);
 		mTargetLinePaint.setAlpha(200);
-		mTargetLinePaint.setShader(shader);
+		Bitmap lightningBitmap = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.lightning_texture);
+		Shader lightningTextureShader = new BitmapShader(lightningBitmap, TileMode.MIRROR, TileMode.MIRROR);
+		mTargetLinePaint.setShader(lightningTextureShader);
 		
 		//mTargetLinePaint.setPathEffect(new DashPathEffect(new float[] {10,20}, 0));
 		mConnectedPaint = new Paint();

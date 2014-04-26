@@ -7,7 +7,7 @@ public class TextGenerator {
 	private static final String[] LOOSE_STRINGS = new String[] {
 		"Try Again!", "Come on!", "You can do it!", "duh!"};
 	private static final String[] WIN_STRINGS = new String[] {
-		"You rock!", "wow!", "Brilliant!", "Excellent!", "Bend master!"};
+		"You rock!", "wow!", "Brilliant!", "Excellent!", "Jellyfish love!"};
 	
 	public static String loose() {
 		return LOOSE_STRINGS[rand.nextInt(LOOSE_STRINGS.length)];

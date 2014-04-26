@@ -31,7 +31,7 @@ public class RenderableManager {
 	
 	public void startGame() {
 		setScreen(mGameScreen);
-		addOverlay(OverlayFactory.getRandom("Connect those dots!"));
+		addOverlay(OverlayFactory.getRandom("Connect those Jellyfishes!"));
 	}
 	
 	public void setBackground(Background bg) {
