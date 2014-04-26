@@ -2,6 +2,7 @@ package se.dolkow.graphbender.scene;
 
 import java.util.ArrayList;
 
+import se.dolkow.graphbender.Metric;
 import se.dolkow.graphbender.logic.Logic;
 import se.dolkow.graphbender.logic.Vertex;
 import android.graphics.Canvas;
@@ -18,9 +19,10 @@ public class Scenery {
 	private final Paint mTextPaint;
 	private final Paint mConnectedPaint;
 	private Paint mTargetLinePaint;
-	private static final int RADIUS = 25;
+	private static int RADIUS = 25;
 	
 	public Scenery() {
+		RADIUS *= Metric.SCALE;
 		mPaint = new Paint();
 		mPaint.setColor(Color.RED);
 		mTextPaint = new Paint();
