@@ -1,9 +1,14 @@
 package se.dolkow.graphbender.scene;
 
+import java.security.spec.MGF1ParameterSpec;
 import java.util.Random;
 
+import se.dolkow.graphbender.Globals;
 import se.dolkow.graphbender.Metric;
+import se.dolkow.graphbender.R;
 import se.dolkow.graphbender.logic.Vertex;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.LinearGradient;
@@ -15,6 +20,8 @@ import android.graphics.RadialGradient;
 import android.graphics.Shader;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
+import android.media.JetPlayer;
+import android.os.SystemClock;
 
 public class FirstScenery extends AbstractScenery {
 	private final Paint mRegularPaint;
@@ -25,8 +32,18 @@ public class FirstScenery extends AbstractScenery {
 	private Paint mTargetLinePaint;
 	private Random mRand;
 	private float mTextMargin;
+	private Bitmap[][] sprites;
+	private long mTime;
+	private int spriteI;
 	
 	public FirstScenery() {
+		Bitmap jelly = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.jelly);
+		sprites = new Bitmap[4][3];
+		for (int x = 0; x < 3; x++) {
+			for (int y = 0; y < 4; y++) {
+				sprites[y][x] = Bitmap.createBitmap(jelly, x * 54, y * 54, 54, 54);
+			}
+		}
 
         RadialGradient circleGradient = new RadialGradient(Metric.VERTEX_RADIUS / 4,
         		Metric.VERTEX_RADIUS / 4,
@@ -73,6 +90,7 @@ public class FirstScenery extends AbstractScenery {
 		mConnectedPaint.setStrokeWidth(7);
 		mConnectedPaint.setAntiAlias(true);
 		mRand = new Random();
+		mTime = System.currentTimeMillis();
 	}
 
 	@Override
@@ -85,13 +103,21 @@ public class FirstScenery extends AbstractScenery {
 		SceneryUtils.drawlineWithRandomWalk(c, v.x, v.y, touchX, touchY, mTargetLinePaint);
 	}
 
+	
 	@Override
     protected void drawVertex(Canvas c, Vertex v) {
-		int x = v.x + mRand.nextInt(v.required*2+1);
-		int y =  v.y + mRand.nextInt(v.required*2+1);
-		c.drawCircle(x, y, Metric.VERTEX_RADIUS,
-				v.selected ? mSelectedPaint : v.hovered ? mHoveredPaint : mRegularPaint);
-		c.drawText("" + v.getRequired(), x - mTextMargin, y + mTextMargin, mTextPaint);
+		int x = v.x; // + mRand.nextInt(v.required*2+1);
+		int y = v.y; // + mRand.nextInt(v.required*2+1);
+		//c.drawCircle(x, y, Metric.VERTEX_RADIUS,
+		//		v.selected ? mSelectedPaint : v.hovered ? mHoveredPaint : mRegularPaint);
+		long time = System.currentTimeMillis();
+		if (time > mTime + 200) {
+			spriteI++;
+			mTime = time;
+		}
+		c.drawBitmap(sprites[0][spriteI % 3], x - 27 , y - 27, null);
+		int r = v.getRequired();
+		c.drawText(r > 0 ? "" + r : "✓", x - mTextMargin, y + mTextMargin, mTextPaint);
     }
 
 

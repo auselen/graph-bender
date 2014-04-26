@@ -19,7 +19,6 @@ public class GameActivity extends Activity {
 		mRenderableManager = new RenderableManager();
 		RenderSurface surface = new RenderSurface(this, mRenderableManager);
 		setContentView(surface);
-		Log.d(TAG, "created");
 	}
 	
 	@Override

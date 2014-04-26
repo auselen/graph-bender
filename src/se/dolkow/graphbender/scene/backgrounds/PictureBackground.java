@@ -5,24 +5,29 @@ import se.dolkow.graphbender.R;
 import se.dolkow.graphbender.ui.Background;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapShader;
 import android.graphics.Canvas;
-import android.graphics.Rect;
+import android.graphics.Paint;
+import android.graphics.Shader;
 
 public class PictureBackground implements Background {
 
 	private Bitmap mBackground;
-	private Rect srcRect;
+	
+	int[] pics = new int[] {R.drawable.pool1};
+	private Paint mPaint;
 
-	public PictureBackground() {
-		mBackground = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.starrynight);
-		srcRect = new Rect(0, 0, mBackground.getWidth(), mBackground.getHeight());
-		
+	public PictureBackground(int n) {
+		n -= 3;
+		mBackground = BitmapFactory.decodeResource(Globals.sAppResources, pics[n % pics.length]);
+		BitmapShader bitmapShader = new BitmapShader(mBackground, Shader.TileMode.MIRROR, Shader.TileMode.MIRROR);
+		mPaint = new Paint();
+		mPaint.setShader(bitmapShader);
 	}
 	
 	@Override
 	public void draw(Canvas c, long frameTime, long deltaTime) {
-		c.drawBitmap(mBackground, srcRect,
-				new Rect(0, 0, c.getWidth(), c.getHeight()), null);
+		c.drawPaint(mPaint);
 	}
 
 	@Override

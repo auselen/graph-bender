@@ -68,11 +68,11 @@ public class GameScreen implements Screen {
 		mAnimator = new SpiralAnimator();
 		mLayout = new PullInRingLayout();
 		mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
-		if (Math.random() > 0.3) {
-			mScreenManager.setBackground(new ColorBackground((int)(0xffffff * Math.random())));
-		} else {
-			mScreenManager.setBackground(new PictureBackground());
-		}
+		//if (n == 2) {
+		//	mScreenManager.setBackground(new ColorBackground((int)(0xffffff * Math.random())));
+		//} else {
+			mScreenManager.setBackground(new PictureBackground(n));
+		//}
 	}
 	
 	@Override

@@ -13,9 +13,9 @@ public class TitleScreen implements Screen {
 	private final RenderableManager mScreenManager;
 	private Paint mPaintDesc;
 	
-	private static final String STR_TITLE = "graph-bender";
+	private static final String STR_TITLE = "Jellyfish Hugger";
 	private static final String TAG = "ScreenTitle";
-	private static final String STR_DESC = "bring down those vertices to zero!";
+	private static final String STR_DESC = "give those Jellyfishes some love!";
 	private static final String STR_DESC2 = "<tap on screen to begin your quest>";
 	
 	public TitleScreen(RenderableManager screenManager) {
@@ -35,7 +35,7 @@ public class TitleScreen implements Screen {
 	public void draw(Canvas c, long time, long delta) {
 		final int w = c.getWidth();
 		final int h = c.getHeight();
-		c.drawColor(Color.BLACK);
+		c.drawColor(Color.MAGENTA);
 		int x = (int) ((w - mPaintTitle.measureText(STR_TITLE)) / 2);
 		int y = h / 2;
 		c.drawText(STR_TITLE, x, y, mPaintTitle);
