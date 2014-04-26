@@ -25,7 +25,7 @@ public class RingLayout implements Layout {
 			v.targetY = MARGIN + (int)(h * (1+Math.sin(i*2*Math.PI / N)));
 		}
     }
-
+	
 	@Override
     public void updateBounds(int width, int height) {
 	    mWidth  = width;

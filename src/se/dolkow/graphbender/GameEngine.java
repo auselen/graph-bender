@@ -5,6 +5,7 @@ import se.dolkow.graphbender.animation.ConstantSpeedAnimator;
 import se.dolkow.graphbender.animation.ProportionalAnimator;
 import se.dolkow.graphbender.animation.SpiralAnimator;
 import se.dolkow.graphbender.layout.Layout;
+import se.dolkow.graphbender.layout.PullInRingLayout;
 import se.dolkow.graphbender.layout.RingLayout;
 import se.dolkow.graphbender.logic.Logic;
 import se.dolkow.graphbender.logic.Vertex;
@@ -44,7 +45,7 @@ public class GameEngine implements Callback {
 	public void createLevel(int n) {
 		mCurrentLogic = new Logic(n);
 		mCurrentScenery = new Scenery();
-		mLayout = new RingLayout(mCurrentLogic);
+		mLayout = new PullInRingLayout(mCurrentLogic);
 		mAnimator = new SpiralAnimator();
 	}
 

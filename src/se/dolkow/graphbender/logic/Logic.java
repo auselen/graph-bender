@@ -86,4 +86,19 @@ public class Logic {
 			}
 		}
 	}
+
+	public int getConnectionCount(int id) {
+		final boolean connected[] = this.connected[id];
+		int count = 0;
+		for (int j=0; j < connected.length; ++j) {
+			if (connected[j]) {
+				count += 1;
+			}
+		}
+		return count-1; // vertices are always connected to themselves
+	}
+	
+	public int getConnectionCount(Vertex v) {
+	    return getConnectionCount(v.id);
+    }
 }
