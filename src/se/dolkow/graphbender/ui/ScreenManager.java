@@ -1,15 +1,17 @@
 package se.dolkow.graphbender.ui;
 
+import se.dolkow.graphbender.GameSurface;
+
 public class ScreenManager {
 
 	private ScreenTitle mScreenTitle;
 	private Screen mActiveScreen;
 	private ScreenGame mScreenGame;
 	
-	public ScreenManager() {
-		mScreenTitle = new ScreenTitle();
+	public ScreenManager(GameSurface gameSurface) {
+		mScreenTitle = new ScreenTitle(gameSurface);
 		mScreenTitle.registerManager(this);
-		mScreenGame = new ScreenGame();
+		mScreenGame = new ScreenGame(gameSurface);
 		mScreenGame.registerManager(this);
 		mActiveScreen = mScreenTitle;
 	}
@@ -20,9 +22,5 @@ public class ScreenManager {
 	
 	public Screen getScreen() {
 		return mActiveScreen;
-	}
-
-	public void surfaceChanged(int width, int height) {
-		mActiveScreen.surfaceChanged(width, height);
 	}
 }
