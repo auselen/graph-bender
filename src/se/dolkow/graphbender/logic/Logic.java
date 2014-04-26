@@ -107,4 +107,12 @@ public class Logic {
 				return false;
 		return true;
 	}
+
+	public boolean satisfiable() {
+		int remaining = 0;
+		for (int i = 0; i < vertices.length; i++)
+			if (vertices[i].required > 0)
+				remaining++;
+		return remaining != 1;
+	}
 }

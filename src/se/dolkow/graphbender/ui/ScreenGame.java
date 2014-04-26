@@ -90,6 +90,9 @@ public class ScreenGame implements Screen {
 				if (mCurrentLogic.satisfied()) {
 					createLevel(++mLevel);
 				}
+				if (!mCurrentLogic.satisfiable()) {
+					createLevel(mLevel);
+				}
 				mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 			}
 		} else if (action == MotionEvent.ACTION_MOVE) {
