@@ -1,18 +1,14 @@
 package se.dolkow.graphbender.ui;
 
-import se.dolkow.graphbender.GameSurface;
-
 public class ScreenManager {
 
 	private ScreenTitle mScreenTitle;
 	private Screen mActiveScreen;
 	private ScreenGame mScreenGame;
 	
-	public ScreenManager(GameSurface gameSurface) {
-		mScreenTitle = new ScreenTitle(gameSurface);
-		mScreenTitle.registerManager(this);
-		mScreenGame = new ScreenGame(gameSurface);
-		mScreenGame.registerManager(this);
+	public ScreenManager() {
+		mScreenTitle = new ScreenTitle(this);
+		mScreenGame = new ScreenGame(this);
 		mActiveScreen = mScreenTitle;
 	}
 

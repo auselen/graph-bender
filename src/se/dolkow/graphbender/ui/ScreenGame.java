@@ -1,6 +1,5 @@
 package se.dolkow.graphbender.ui;
 
-import se.dolkow.graphbender.GameSurface;
 import se.dolkow.graphbender.Metric;
 import se.dolkow.graphbender.animation.Animator;
 import se.dolkow.graphbender.animation.SpiralAnimator;
@@ -13,39 +12,35 @@ import se.dolkow.graphbender.scene.Scenery;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.SystemClock;
-import android.view.Choreographer;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
 
-public class ScreenGame extends Screen {
+public class ScreenGame implements Screen {
 	private Logic mCurrentLogic;
 	private Scenery mCurrentScenery;
 	private Layout mLayout;
 	private Layout mLevelInitLayout;
 	private Animator mAnimator;
 	
+	private final Paint timePaint = new Paint();
+	
 	private float mTargetY;
 	private float mTargetX;
 	private int mLevel = 2;
-	private int mWidth;
-	private int mHeight;
 	private long mLevelStartTime;
-	private final FrameCallback frameCallback;
-	private final Choreographer choreographer;
+	private int mHeight;
+	private int mWidth;
 	
-	public ScreenGame(GameSurface gameSurface) {
-		super(gameSurface);
+	public ScreenGame(ScreenManager screenManager) {
+		super();
 		mLayout = new PullInRingLayout();
 		mLevelInitLayout = new SingularityLayout();
 		mAnimator = new SpiralAnimator();
 		mCurrentScenery = new Scenery();
 		
-		createLevel(mLevel);
+		timePaint.setColor(Color.CYAN);
+		timePaint.setTextSize(Metric.TIMESTAMP_SIZE);
 		
-		frameCallback = new FrameCallback();
-		choreographer = Choreographer.getInstance();
-		requestFrame();
+		createLevel(mLevel);
 	}
 	
 	public void createLevel(int n) {
@@ -54,14 +49,12 @@ public class ScreenGame extends Screen {
 		mLevelInitLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 	}
 	
-	@Override
-	public void draw(Canvas c) {
-		mAnimator.update(mCurrentLogic, SystemClock.elapsedRealtimeNanos()); // TODO: use Choreographer as time source instead
-		mCurrentScenery.draw(c, mCurrentLogic, mTargetX, mTargetY);
+	public void update(long frameTime, long timeDeltaNano) {
+		mAnimator.update(mCurrentLogic, timeDeltaNano);
 	}
 
 	@Override
-	public void onTouchEvent(MotionEvent event) {
+	public void handleTouch(MotionEvent event) {
 		int action = event.getAction(); 
 		float x = event.getX();
 		float y = event.getY();
@@ -114,37 +107,17 @@ public class ScreenGame extends Screen {
 			}
 		}
 	}
-	
-	private void requestFrame() {
-		choreographer.postFrameCallback(frameCallback);
-	}
-	
-	class FrameCallback implements Choreographer.FrameCallback {
-		private final Paint timePaint = new Paint();
 
-		public FrameCallback() {
-			timePaint.setColor(Color.CYAN);
-			timePaint.setTextSize(Metric.TIMESTAMP_SIZE);
-		}
-		
-		@Override
-        public void doFrame(long time) {
-			requestFrame(); // TODO: only do this if animator or scene tells us it's needed -- avoid redrawing unnecessarily.
-			mAnimator.update(mCurrentLogic, time);
-			if (mSurfaceAvailable) {
-				SurfaceHolder holder = mGameSurface.getHolder();
-				Canvas c = holder.lockCanvas();
-				mCurrentScenery.draw(c, mCurrentLogic, mTargetX, mTargetY);
-				c.drawText("" + ((time - mLevelStartTime)/1000000)/1000.0, 5, Metric.TIMESTAMP_SIZE, timePaint);
-				holder.unlockCanvasAndPost(c);
-			}
-        }
+	@Override
+	public void draw(Canvas c, long frameTime, long deltaTime) {
+		mCurrentScenery.draw(c, mCurrentLogic, mTargetX, mTargetY);
+		c.drawText("" + ((frameTime - mLevelStartTime)/1000000)/1000.0, 5, Metric.TIMESTAMP_SIZE, timePaint);
 	}
 
 	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
-		super.surfaceChanged(holder, format, width, height);
+	public void sizeChanged(int width, int height) {
+		mWidth = width;
+		mHeight = height;
 		mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 	}
 	

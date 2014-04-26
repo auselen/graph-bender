@@ -5,22 +5,13 @@ import se.dolkow.graphbender.logic.Vertex;
 
 public abstract class AbstractAnimator implements Animator {
 
-	private long lastFrameTimeNanos;
-	
 	@Override
-    public final void update(Logic logic, long frameTimeNanos) {
-	    final long nanoDiff;
-	    if (lastFrameTimeNanos == 0 || lastFrameTimeNanos >= frameTimeNanos) {
-	    	nanoDiff = 1;
-	    } else {
-	    	nanoDiff = frameTimeNanos - lastFrameTimeNanos;
-	    }
+    public final void update(Logic logic, long nanoDiff) {
 	    final double diff = nanoDiff / 1000000000.0;
 	    final int N = logic.getVertexCount();
 	    for (int i=0; i<N; ++i) {
 	    	updateVertex(logic.getVertex(i), diff);
 	    }
-	    lastFrameTimeNanos = frameTimeNanos;
     }
 
 	/** 

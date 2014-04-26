@@ -7,7 +7,7 @@ import se.dolkow.graphbender.logic.Logic;
  */
 public interface Animator {
 	/**
-	 * @param frameTimeNanos timestamp of the current frame
+	 * @param frameTimeNanos delta, in nanoseconds, from the last update.
 	 */
-	public void update(Logic logic, long frameTimeNanos);
+	public void update(Logic logic, long nanoDelta);
 }

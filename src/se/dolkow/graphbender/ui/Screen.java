@@ -1,44 +1,19 @@
 package se.dolkow.graphbender.ui;
 
-import se.dolkow.graphbender.GameSurface;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
 
-public abstract class Screen implements SurfaceHolder.Callback {
-	protected ScreenManager mScreenManager;
-	public volatile boolean mSurfaceAvailable;
-	protected int mHeight;
-	protected int mWidth;
-	protected GameSurface mGameSurface;
-
-	public abstract void draw(Canvas c);
-	public abstract void onTouchEvent(MotionEvent event);
-
-	public Screen(GameSurface gameSurface) {
-		mGameSurface = gameSurface;
-		gameSurface.getHolder().addCallback(this);
-	}
-
-	public void registerManager(ScreenManager manager) {
-		mScreenManager = manager;
-	}
+public interface Screen {
+	/** Handle a touch event */
+	public void handleTouch(MotionEvent event);
 	
-	@Override
-	public void surfaceChanged(SurfaceHolder holder, int format, int width,
-			int height) {
-		mWidth = width;
-		mHeight = height;
-	}
+	/** Canvas size may have changed */
+	public void sizeChanged(int width, int height);
+	
+	/** Update state for the next frame */
+	public void update(long frameTime, long deltaTime);
+	
+	/** Draw! */
+	public void draw(Canvas c, long frameTime, long deltaTime);
 
-	@Override
-	public void surfaceCreated(SurfaceHolder holder) {
-		mSurfaceAvailable = true;
-		
-	}
-
-	@Override
-	public void surfaceDestroyed(SurfaceHolder holder) {
-		mSurfaceAvailable = false;
-	}
 }
