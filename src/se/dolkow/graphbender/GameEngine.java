@@ -56,19 +56,40 @@ public class GameEngine implements Callback {
 				Vertex v = mCurrentLogic.getVertex(i);
 				if (hits(v, x, y)) {
 					v.selected = true;
+					mTargetX = x;
+					mTargetY = y;
 					break;
 				}
 			}
 		} else if ((action == MotionEvent.ACTION_UP)
 				|| (action == MotionEvent.ACTION_CANCEL)) {
 			int n = mCurrentLogic.getVertexCount();
+			int selected = -1;
+			int hovered = -1;
 			for (int i = 0; i < n; i++) {
 				Vertex v = mCurrentLogic.getVertex(i);
+				if (v.selected)
+					selected = i;
+				if (v.hovered)
+					hovered = i;
 				v.selected = false;
+				v.hovered = false;
+			}
+			if ((selected != -1) && (hovered != -1)) {
+				mCurrentLogic.connect(selected, hovered);
 			}
 		} else if (action == MotionEvent.ACTION_MOVE) {
 			mTargetX = x;
 			mTargetY = y;
+			int n = mCurrentLogic.getVertexCount();
+			for (int i = 0; i < n; i++) {
+				Vertex v = mCurrentLogic.getVertex(i);
+				if (hits(v, x, y)) {
+					v.hovered = true;
+				} else {
+					v.hovered = false;
+				}
+			}
 		}
 		mLayout.updateDesiredPositions(); // TODO: this is probably not the best place for this. We should make sure that re-layout is done at any time that the logic may have changed.
 	}
