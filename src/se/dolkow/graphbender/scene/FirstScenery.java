@@ -11,11 +11,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.PorterDuff.Mode;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.Shader;
 import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
 
 public class FirstScenery extends AbstractScenery {
+	private static final int[] JELLY_COLORS = {
+		0xffaaaa, 0xaaffaa, 0xaaaaff,
+		0xffffaa, 0xffaaff, 0xaaffff,
+		0xaaaaaa, 0xddaa77, 0xdd55aa,
+	};
+	private static final Paint[] JELLY_PAINTS;
 	private final Paint mRegularPaint;
 	private final Paint mSelectedPaint;
 	private final Paint mHoveredPaint;
@@ -26,6 +34,16 @@ public class FirstScenery extends AbstractScenery {
 	private Bitmap[][] sprites;
 	private long mTime;
 	private int spriteI;
+	
+	static {
+		JELLY_PAINTS = new Paint[JELLY_COLORS.length];
+		for (int i=0; i<JELLY_COLORS.length; ++i) {
+			int argb = 0xff000000 | JELLY_COLORS[i];
+			JELLY_PAINTS[i] = new Paint();
+			PorterDuffColorFilter filter = new PorterDuffColorFilter(argb, Mode.MULTIPLY);
+			JELLY_PAINTS[i].setColorFilter(filter);
+		}
+	}
 	
 	public FirstScenery() {
 		Bitmap jelly = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.jellyfish);
@@ -104,10 +122,13 @@ public class FirstScenery extends AbstractScenery {
 			spriteI++;
 			mTime = time;
 		}
-		int personality = v.hashCode() >> 4;
+		int personality = v.hashCode() >> 5;
 		double diff = 5 * Math.sin(personality + time * 0.005);
-		c.drawBitmap(sprites[1][(personality + spriteI) % 4], x - 48, (int) (y - 48 + diff), null);
-		c.drawBitmap(sprites[0][(personality + spriteI) % 6], x - 48, (int) (y - 48 + diff), null);
+		
+		Paint fishPaint = JELLY_PAINTS[personality % JELLY_PAINTS.length];
+		
+		c.drawBitmap(sprites[1][(personality + spriteI) % 4], x - 48, (int) (y - 48 + diff), fishPaint);
+		c.drawBitmap(sprites[0][(personality + spriteI) % 6], x - 48, (int) (y - 48 + diff), fishPaint);
 		c.drawBitmap(sprites[1][4], v.x - 48, v.y - 48 + (int) (diff * 0.7), null);
 		int r = v.getRequired();
 		c.drawText(r > 0 ? "" + r : "♥", x - mTextMargin, v.y - Metric.VERTEX_TEXT_SIZE, mTextPaint);
