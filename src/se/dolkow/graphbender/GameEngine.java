@@ -42,7 +42,7 @@ public class GameEngine implements Callback {
 		createLevel(mLevel);
 		new GraphLoop().start();
 	};
-	
+
 	public void createLevel(int n) {
 		mCurrentLogic = new Logic(n);
 		mCurrentScenery = new Scenery();
@@ -104,10 +104,8 @@ public class GameEngine implements Callback {
 	}
 
 	private static boolean hits(Vertex v, float x, float y) {
-		float vx = v.x;
-		float vy = v.y;
-		int rad = (int) (25 * Metric.SCALE);
-		return (Math.abs(vx - x) < rad) && (Math.abs(vy - y) < rad);
+		return (Math.abs(v.x - x) < Metric.FINGER_SIZE) &&
+				(Math.abs(v.y - y) < Metric.FINGER_SIZE);
 	}
 
 	class GraphLoop extends Thread {
@@ -115,8 +113,7 @@ public class GameEngine implements Callback {
 		public void run() {
 			Paint timePaint = new Paint();
 			timePaint.setColor(Color.CYAN);
-			int textSize = (int) (16 * Metric.SCALE);
-			timePaint.setTextSize(textSize);
+			timePaint.setTextSize(Metric.TIMESTAMP_SIZE);
 			long startTime = System.nanoTime();
 			while (true) {
 				long time = System.nanoTime();
@@ -125,7 +122,7 @@ public class GameEngine implements Callback {
 					SurfaceHolder holder = mGameSurface.getHolder();
 					Canvas c = holder.lockCanvas();
 					mCurrentScenery.draw(c, mCurrentLogic, mTargetX, mTargetY);
-					c.drawText("" + (time - startTime), 5, textSize, timePaint);
+					c.drawText("" + (time - startTime), 5, Metric.TIMESTAMP_SIZE, timePaint);
 					holder.unlockCanvasAndPost(c);
 				}
 				try {
