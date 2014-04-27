@@ -35,8 +35,6 @@ public class FirstScenery extends AbstractScenery {
 	private Paint mTargetLinePaint;
 	private float mTextMargin;
 	private Bitmap[][] sprites;
-	private long mTime;
-	private int spriteI;
 	private float mHaloLength;
 	
 	static {
@@ -59,7 +57,6 @@ public class FirstScenery extends AbstractScenery {
 		}
 		sprites[0][4] = sprites[0][2];
 		sprites[0][5] = sprites[0][1];
-        sprites[1][3] = sprites[1][1];
 		
 		mRegularPaint = new Paint();
 		mRegularPaint.setColor(Color.RED);
@@ -101,8 +98,6 @@ public class FirstScenery extends AbstractScenery {
 		mConnectedPaint.setStyle(Style.STROKE);
 		mConnectedPaint.setShader(lightningTextureShader);
 
-		mTime = System.currentTimeMillis();
-		
 		mHaloLength = (float) (Math.pow(Metric.VERTEX_RADIUS * 1.5f, 2) * Math.PI) / 500;
 	}
 
@@ -124,12 +119,10 @@ public class FirstScenery extends AbstractScenery {
 		//c.drawCircle(x, y, Metric.VERTEX_RADIUS,
 		//		v.selected ? mSelectedPaint : v.hovered ? mHoveredPaint : mRegularPaint);
 		long time = System.currentTimeMillis();
-		if (time > mTime + 200) {
-			spriteI++;
-			mTime = time;
-		}
+		int spriteI = (int)(time / 300) & 0x0ffffff;
 		int personality = v.hashCode() >> 5;
-		double diff = 5 * Math.sin(personality + time * 0.005);
+		final double phase = (personality + time * 0.002) % (2*Math.PI); 
+		double diff = 10 * Math.cos(phase);
 		
 		if (vd.selected || vd.hovered) {
 			Paint haloPaint = vd.connectable ? mPendingOkPaint : (vd.unconnectable ? mPendingBadPaint : mPendingMaybePaint);
@@ -140,8 +133,18 @@ public class FirstScenery extends AbstractScenery {
 		}
 		
 		Paint fishPaint = JELLY_PAINTS[personality % JELLY_PAINTS.length];
-		c.drawBitmap(sprites[1][(personality + spriteI) % 4], x - 48, (int) (y - 48 + diff), fishPaint);
+		int legs = 0;
+		if (phase < 0.4) {
+			legs = 1;
+		} else if (phase < Math.PI+0.2) {
+			legs = 3;
+		} else if (phase < 5) {
+			legs = 2;
+		}
+		c.drawBitmap(sprites[1][legs], x - 48, (int) (y - 48 + diff), fishPaint);
+
 		c.drawBitmap(sprites[0][(personality + spriteI) % 6], x - 48, (int) (y - 48 + diff), fishPaint);
+		
 		int r = v.getRequired();
 		int eyes = Math.min((r+1)/2, 3);
 		c.drawBitmap(sprites[2][eyes], v.x - 48, v.y - 48 + (int) (diff * 0.7), null);
