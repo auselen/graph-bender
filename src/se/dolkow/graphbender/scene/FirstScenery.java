@@ -37,6 +37,7 @@ public class FirstScenery extends AbstractScenery {
 	private Bitmap[][] sprites;
 	private long mTime;
 	private int spriteI;
+	private float mHaloLength;
 	
 	static {
 		JELLY_PAINTS = new Paint[JELLY_COLORS.length];
@@ -78,7 +79,7 @@ public class FirstScenery extends AbstractScenery {
 		mPendingOkPaint.setColor(Color.GREEN);
 		mPendingOkPaint.setStyle(Style.STROKE);
 		mPendingOkPaint.setAntiAlias(true);
-		mPendingOkPaint.setPathEffect(new DashPathEffect(new float[] {10,20}, 0));
+		mPendingOkPaint.setPathEffect(new DashPathEffect(new float[] {10,20}, 10));
 		mPendingOkPaint.setStrokeWidth(25);
 		
 		mPendingMaybePaint = new Paint(mPendingOkPaint);
@@ -110,6 +111,8 @@ public class FirstScenery extends AbstractScenery {
 		mConnectedPaint.setAntiAlias(true);
 		mConnectedPaint.setShadowLayer(3, 3, 3, Color.BLACK);
 		mTime = System.currentTimeMillis();
+		
+		mHaloLength = (float) (Math.pow(Metric.VERTEX_RADIUS * 1.5f, 2) * Math.PI) / 500;
 	}
 
 	@Override
@@ -139,6 +142,9 @@ public class FirstScenery extends AbstractScenery {
 		
 		if (vd.selected || vd.hovered) {
 			Paint haloPaint = vd.connectable ? mPendingOkPaint : (vd.unconnectable ? mPendingBadPaint : mPendingMaybePaint);
+			
+			DashPathEffect effect = new DashPathEffect(new float[] { mHaloLength, mHaloLength }, (float) diff * 2);
+			haloPaint.setPathEffect(effect);
 			c.drawCircle(x, y, Metric.VERTEX_RADIUS * 1.5f, haloPaint);
 		}
 		
