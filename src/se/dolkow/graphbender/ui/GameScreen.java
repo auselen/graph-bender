@@ -13,7 +13,6 @@ import se.dolkow.graphbender.layout.SingularityLayout;
 import se.dolkow.graphbender.logic.Logic;
 import se.dolkow.graphbender.logic.Vertex;
 import se.dolkow.graphbender.scene.FirstScenery;
-import se.dolkow.graphbender.scene.backgrounds.ColorBackground;
 import se.dolkow.graphbender.scene.backgrounds.PictureBackground;
 import se.dolkow.graphbender.util.TextGenerator;
 import android.graphics.Canvas;
@@ -180,7 +179,7 @@ public class GameScreen implements Screen {
 				mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.win()));
 			}
 			if (!mCurrentLogic.satisfiable()) {
-				mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.loose()));
+				mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.lose()));
 				mAnimator = new ScrollAwayAnimator();
 				mLayout = new SingularityLayout(); // TODO: could have a nice initial layout for the restarted level..
 				mHandler.sendEmptyMessageDelayed(MSG_RESTART_LEVEL, LEVEL_CHANGE_DELAY);

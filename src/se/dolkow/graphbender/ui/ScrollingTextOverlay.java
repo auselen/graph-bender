@@ -1,6 +1,5 @@
 package se.dolkow.graphbender.ui;
 
-import static se.dolkow.graphbender.util.Utils.linterp;
 import se.dolkow.graphbender.Metric;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -12,7 +11,6 @@ public class ScrollingTextOverlay implements Overlay {
 	private final String text;
 	private final Paint textPaint = new Paint();
 	private int height;
-	private int width;
 	private final float textWidth;
 	private int pos;
 	
@@ -24,12 +22,11 @@ public class ScrollingTextOverlay implements Overlay {
 		textPaint.setShadowLayer(10, 10, 10, Color.BLACK);
 		textPaint.setTypeface(Typeface.MONOSPACE);
 		textWidth = textPaint.measureText(text);
-		pos = (int) textWidth;
 	}
 
 	@Override
     public void sizeChanged(int w, int h) {
-	    width = w;
+	    pos = w;
 	    height = h;
     }
 
@@ -40,7 +37,7 @@ public class ScrollingTextOverlay implements Overlay {
 
 	@Override
     public boolean update(long frameTime, long deltaTime) {
-	    pos -= 10 * Metric.SCALE;
+	    pos -= (int)(Metric.SCALE * 0.0000006 * deltaTime);
 	    return pos > -textWidth;
     }
 }

@@ -1,14 +1,10 @@
 package se.dolkow.graphbender.ui;
 
+import static se.dolkow.graphbender.util.Utils.linterp;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Xfermode;
-import android.util.Log;
-import static se.dolkow.graphbender.util.Utils.linterp;
 
 public class FadingTextOverlay implements Overlay {
 

@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.graphics.Path.Direction;
 
 public class ScalingTextOverlay implements Overlay {
 
@@ -14,7 +13,6 @@ public class ScalingTextOverlay implements Overlay {
 	private int width;
 	private int height;
 	private float textWidth;
-	private int pos;
 	private int textSize;
 	private boolean dir;
 	private boolean mBottom;
@@ -29,7 +27,6 @@ public class ScalingTextOverlay implements Overlay {
 		textPaint.setTextSize(textSize);
 		textPaint.setTypeface(Typeface.MONOSPACE);
 		textWidth = textPaint.measureText(text);
-		pos = (int) textWidth;
 	}
 
 	public ScalingTextOverlay(String s, boolean b, boolean bottomOrTop) {
@@ -50,7 +47,7 @@ public class ScalingTextOverlay implements Overlay {
 
 	@Override
     public boolean update(long frameTime, long deltaTime) {
-		textSize += dir ? -5*Metric.SCALE : 5*Metric.SCALE;
+		textSize += (dir ? -1 : 1) * Metric.SCALE * deltaTime * 0.0000001;
 		textPaint.setTextSize(textSize);
 		textWidth = textPaint.measureText(text);
 	    return dir ? textSize > 0 : textSize < 200;
