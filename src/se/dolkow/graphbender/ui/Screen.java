@@ -14,4 +14,9 @@ interface Screen extends Renderable {
 	 * @return true if the event was handled
 	 */
 	public boolean handleKeyDown(int keyCode, KeyEvent event);
+
+	/**
+	 * @return true if the key press was handled
+	 */
+	public boolean onBackPressed();
 }

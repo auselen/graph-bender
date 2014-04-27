@@ -25,7 +25,8 @@ public class GameActivity extends Activity {
 	
 	@Override
 	public void onBackPressed() {
-		if (mRenderableManager.backPressed())
+		if (!mRenderableManager.backPressed()) {
 			super.onBackPressed();
+		}
 	}
 }

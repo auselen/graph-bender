@@ -17,13 +17,17 @@ public class PictureBackground implements Background {
 		c.drawBitmap(sBackground, 0, 0, null);
 	}
 
+	public static void loadBitmap() {
+		if (sOrigBitmap == null) {
+			sOrigBitmap = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.pool1);
+		}
+	}
+	
 	@Override
 	public void sizeChanged(int width, int height) {
 		if (width != 0 && height != 0) {
 			if (sBackground == null || width != sBackground.getWidth() && height != sBackground.getHeight()) {
-				if (sOrigBitmap == null) {
-					sOrigBitmap = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.pool1);
-				}
+				loadBitmap();
 				sBackground = Bitmap.createScaledBitmap(sOrigBitmap, width, height, true);
 			}
 		}

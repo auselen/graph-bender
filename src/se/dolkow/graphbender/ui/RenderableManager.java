@@ -2,7 +2,11 @@ package se.dolkow.graphbender.ui;
 
 import java.util.ArrayList;
 
+import se.dolkow.graphbender.scene.backgrounds.ColorBackground;
+import se.dolkow.graphbender.scene.backgrounds.PictureBackground;
+
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -25,10 +29,12 @@ public class RenderableManager {
 	public RenderableManager() {
 		mTitleScreen = new TitleScreen(this);
 		mGameScreen = new GameScreen(this);
-		mActiveScreen = mTitleScreen;
+		PictureBackground.loadBitmap();
+		quitGame();
 	}
 
 	private void setScreen(Screen sc) {
+		mOverlays.clear();
 		mActiveScreen = sc;
 		sc.sizeChanged(mWidth, mHeight);
 	}
@@ -36,6 +42,7 @@ public class RenderableManager {
 	public void startGame() {
 		mGameScreen.restart();
 		setScreen(mGameScreen);
+		setBackground(new PictureBackground());
 		addOverlay(OverlayFactory.getRandom("Connect those Jellyfishes!"));
 	}
 	
@@ -91,12 +98,7 @@ public class RenderableManager {
     }
 
 	public boolean backPressed() {
-		if (mActiveScreen == mGameScreen) {
-			mActiveScreen = mTitleScreen;
-			return false;
-		} else {
-			return true;
-		}
+		return mActiveScreen.onBackPressed();
 	}
 
 	public void registerVibrator(Vibrator bzzz) {
@@ -113,5 +115,7 @@ public class RenderableManager {
 	}
 
 	public void quitGame() {
+		setScreen(mTitleScreen);
+		setBackground(new ColorBackground(0xffff66dd));
 	}	
 }

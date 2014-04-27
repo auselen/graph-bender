@@ -5,9 +5,11 @@ public class Vertex {
 	public int x, y;
 	public int targetX, targetY;
 	public int required;
+	public int personality;
 	
 	public Vertex(int id) {
 		this.id = id;
+		this.personality = hashCode() >> 5;
 	}
 
 	public int getRequired() {
