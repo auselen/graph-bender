@@ -149,7 +149,7 @@ public class GameScreen implements Screen {
 				break;
 				*/
 			case KeyEvent.KEYCODE_BUTTON_A:
-				connectCheck();
+				dragEnded(true);
 				break;
 		}
 	}
@@ -169,9 +169,10 @@ public class GameScreen implements Screen {
 					break;
 				}
 			}
-		} else if ((action == MotionEvent.ACTION_UP)
-				|| (action == MotionEvent.ACTION_CANCEL)) {
-			connectCheck();
+		} else if (action == MotionEvent.ACTION_UP) {
+			dragEnded(true);
+		} else if (action == MotionEvent.ACTION_CANCEL) {
+			dragEnded(false);
 		} else if (action == MotionEvent.ACTION_MOVE) {
 			moveCheck();
 		}
@@ -202,12 +203,13 @@ public class GameScreen implements Screen {
 				if (mCurrentLogic.satisfied()) {
 					mLayout = new SingularityLayout();
 					if (mLevel < GOAL_LEVEL) {
-					mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);
-					mScreenManager.addOverlay(new ScalingTextOverlay("Level " + mLevel, true, true));
-					mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.win()));
-				} else {
-					mLevelFinishTime = System.nanoTime() - mLevelStartTime;
-					mScreenManager.addOverlay(new ScalingTextOverlay("You won! " + mLevelFinishTime, true));
+						mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);
+						mScreenManager.addOverlay(new ScalingTextOverlay("Level " + mLevel, true, true));
+						mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.win()));
+					} else {
+						mLevelFinishTime = System.nanoTime() - mLevelStartTime;
+						mScreenManager.addOverlay(new ScalingTextOverlay("You won! " + mLevelFinishTime, true));
+					}
 				}
 			}
 			if (!mCurrentLogic.satisfiable()) {
