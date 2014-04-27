@@ -19,6 +19,7 @@ import android.graphics.Shader.TileMode;
 import android.graphics.Typeface;
 
 public class FirstScenery extends AbstractScenery {
+	private static final int SPRITE_SIZE = 96;
 	private static final int[] JELLY_COLORS = {
 		0x88ccff, 0xaaffaa, 0xaaaaff,
 		0xffffaa, 0xffaaff, 0xffaaaa, 
@@ -53,7 +54,7 @@ public class FirstScenery extends AbstractScenery {
 		sprites = new Bitmap[3][6];
 		for (int x = 0; x < 4; x++) {
 			for (int y = 0; y < 3; y++) {
-				sprites[y][x] = Bitmap.createBitmap(jelly, x * 96, y * 96, 96, 96);
+				sprites[y][x] = Bitmap.createBitmap(jelly, x * SPRITE_SIZE, y * SPRITE_SIZE, SPRITE_SIZE, SPRITE_SIZE);
 			}
 		}
 		sprites[0][4] = sprites[0][2];
@@ -126,13 +127,14 @@ public class FirstScenery extends AbstractScenery {
 		double diff = 10 * Math.cos(phase);
 		
 		if (vd.selected || vd.hovered) {
-			Paint haloPaint = vd.connectable ? mPendingOkPaint : (vd.unconnectable ? mPendingBadPaint : mPendingMaybePaint);
+			Paint haloPaint = vd.connectable ? mPendingOkPaint :
+				(vd.unconnectable ? mPendingBadPaint : mPendingMaybePaint);
 			
 			DashPathEffect effect = new DashPathEffect(new float[] { mHaloLength, mHaloLength }, (float) diff * 2);
 			haloPaint.setPathEffect(effect);
 			c.drawCircle(x, y, Metric.VERTEX_RADIUS * 1.5f, haloPaint);
 		}
-		
+	
 		Paint fishPaint = JELLY_PAINTS[v.personality % JELLY_PAINTS.length];
 		int legs = 0;
 		if (phase < 0.4) {
@@ -142,15 +144,16 @@ public class FirstScenery extends AbstractScenery {
 		} else if (phase < 5) {
 			legs = 2;
 		}
-		c.drawBitmap(sprites[1][legs], x - 48, (int) (y - 48 + diff), fishPaint);
+		c.drawBitmap(sprites[1][legs], x - SPRITE_SIZE/2, (int) (y - SPRITE_SIZE/2 + diff), fishPaint);
 
-		c.drawBitmap(sprites[0][(v.personality + spriteI) % 6], x - 48, (int) (y - 48 + diff), fishPaint);
+		c.drawBitmap(sprites[0][(v.personality + spriteI) % 6], x - SPRITE_SIZE/2, (int) (y - SPRITE_SIZE/2 + diff), fishPaint);
 		
 		int r = v.getRequired();
 		int eyes = Math.min((r+1)/2, 3);
-		c.drawBitmap(sprites[2][eyes], v.x - 48, v.y - 48 + (int) (diff * 0.7), null);
+		c.drawBitmap(sprites[2][eyes], v.x - SPRITE_SIZE/2, v.y - SPRITE_SIZE/2 + (int) (diff * 0.7), null);
 		float margin = r > 0 ? mTextMargin : mHeartMargin; 
-		c.drawText(r > 0 ? "" + r : "♥", x - margin, v.y - (int)(Metric.VERTEX_TEXT_SIZE*1.2), r > 0 ? mTextPaint : mTextPinkPaint);
+		c.drawText(r > 0 ? "" + r : "♥", x - margin, v.y - (int)(Metric.VERTEX_TEXT_SIZE*1.2),
+				r > 0 ? mTextPaint : mTextPinkPaint);
     }
 
 

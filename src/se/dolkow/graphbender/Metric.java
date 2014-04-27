@@ -9,8 +9,8 @@ public class Metric {
 
 	public static void setScale(float scale) {
 		SCALE = scale;
-		VERTEX_RADIUS = 25 * scale;
-		FINGER_SIZE = 30 * scale;
+		VERTEX_RADIUS = 37.5f;
+		FINGER_SIZE = 35 * scale;
 		TIMESTAMP_SIZE = 25 * scale;
 		VERTEX_TEXT_SIZE = 25 * scale;
 	}
