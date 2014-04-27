@@ -52,6 +52,8 @@ public class GameScreen implements Screen {
 	private RenderableManager mScreenManager;
 
 	private int mSelected;
+
+	private int mHovered;
 	
 	public GameScreen(RenderableManager screenManager) {
 		super();
@@ -85,6 +87,8 @@ public class GameScreen implements Screen {
 		Log.d(TAG, "key down " + keyCode + " " + event);
 		if (mSelected == -1)
 			mSelected = 0;
+		if (mHovered == -1)
+			mHovered = 0;
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_BUTTON_L1:
 				mCurrentLogic.getVertex(mSelected).selected = false;
@@ -104,20 +108,44 @@ public class GameScreen implements Screen {
 				mTargetY = mCurrentLogic.getVertex(mSelected).y;
 				mCurrentLogic.getVertex(mSelected).selected = true;
 				break;
+			case KeyEvent.KEYCODE_BUTTON_L2:
+				mCurrentLogic.getVertex(mHovered).hovered = false;
+				mHovered--;
+				if (mHovered < 0)
+					mHovered = mCurrentLogic.getVertexCount() - 1;
+				mTargetX = mCurrentLogic.getVertex(mSelected).x;
+				mTargetY = mCurrentLogic.getVertex(mSelected).y;
+				mCurrentLogic.getVertex(mSelected).selected = true;
+				break;
+			case KeyEvent.KEYCODE_BUTTON_R2:
+				mCurrentLogic.getVertex(mSelected).selected = false;
+				mSelected++;
+				if (mSelected == mCurrentLogic.getVertexCount())
+					mSelected = 0;
+				mTargetX = mCurrentLogic.getVertex(mSelected).x;
+				mTargetY = mCurrentLogic.getVertex(mSelected).y;
+				mCurrentLogic.getVertex(mSelected).selected = true;
+				break;
+				/*
 			case KeyEvent.KEYCODE_DPAD_UP:
 				mTargetY -= 10;
+				moveCheck();
 				break;
 			case KeyEvent.KEYCODE_DPAD_DOWN:
 				mTargetY += 10;
+				moveCheck();
 				break;
 			case KeyEvent.KEYCODE_DPAD_LEFT:
 				mTargetX -= 10;
+				moveCheck();
 				break;
 			case KeyEvent.KEYCODE_DPAD_RIGHT:
 				mTargetX += 10;
+				moveCheck();
 				break;
+				*/
 			case KeyEvent.KEYCODE_BUTTON_A:
-				check();
+				connectCheck();
 				break;
 		}
 	}
@@ -141,22 +169,25 @@ public class GameScreen implements Screen {
 			}
 		} else if ((action == MotionEvent.ACTION_UP)
 				|| (action == MotionEvent.ACTION_CANCEL)) {
-			check();
+			connectCheck();
 		} else if (action == MotionEvent.ACTION_MOVE) {
-			int n = mCurrentLogic.getVertexCount();
-			for (int i = 0; i < n; i++) {
-				Vertex v = mCurrentLogic.getVertex(i);
-				if (hits(v, mTargetX, mTargetY)) {
-					if (v.required > 0)
-						v.hovered = true;
-				} else {
-					v.hovered = false;
-				}
-			}
+			moveCheck();
 		}
 	}
 
-	private void check() {
+	private void moveCheck() {
+		int n = mCurrentLogic.getVertexCount();
+		for (int i = 0; i < n; i++) {
+			Vertex v = mCurrentLogic.getVertex(i);
+			if (hits(v, mTargetX, mTargetY)) {
+				if (v.required > 0)
+					v.hovered = true;
+			} else {
+				v.hovered = false;
+			}
+		}
+	}
+	private void connectCheck() {
 		final int n = mCurrentLogic.getVertexCount();
 		int selected = -1;
 		int hovered = -1;

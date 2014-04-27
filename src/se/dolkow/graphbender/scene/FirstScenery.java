@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.PorterDuff.Mode;
@@ -74,11 +75,17 @@ public class FirstScenery extends AbstractScenery {
 
 		mSelectedPaint = new Paint();
 		mSelectedPaint.setColor(Color.BLUE);
+		mSelectedPaint.setStyle(Style.STROKE);
 		mSelectedPaint.setAntiAlias(true);
+		mSelectedPaint.setPathEffect(new DashPathEffect(new float[] {10,20}, 0));
+		mSelectedPaint.setStrokeWidth(25);
 		
 		mHoveredPaint = new Paint();
 		mHoveredPaint.setColor(Color.GREEN);
-		mHoveredPaint.setAntiAlias(true);;
+		mHoveredPaint.setStyle(Style.STROKE);
+		mHoveredPaint.setAntiAlias(true);
+		mHoveredPaint.setPathEffect(new DashPathEffect(new float[] {10,20}, 0));
+		mHoveredPaint.setStrokeWidth(25);
 		
 		mTargetLinePaint = new Paint();
 		mTargetLinePaint.setColor(Color.YELLOW);
@@ -129,6 +136,8 @@ public class FirstScenery extends AbstractScenery {
 		
 		Paint fishPaint = JELLY_PAINTS[personality % JELLY_PAINTS.length];
 		
+		if (v.selected || v.hovered)
+			c.drawCircle(x, y, Metric.VERTEX_RADIUS * 1.5f, v.selected ? mSelectedPaint : mHoveredPaint);
 		c.drawBitmap(sprites[1][(personality + spriteI) % 4], x - 48, (int) (y - 48 + diff), fishPaint);
 		c.drawBitmap(sprites[0][(personality + spriteI) % 6], x - 48, (int) (y - 48 + diff), fishPaint);
 		int r = v.getRequired();
