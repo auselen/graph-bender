@@ -7,6 +7,8 @@ import se.dolkow.graphbender.logic.Vertex;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
+import android.graphics.BlurMaskFilter;
+import android.graphics.BlurMaskFilter.Blur;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -88,6 +90,9 @@ public class FirstScenery extends AbstractScenery {
 		mHoveredPaint.setStrokeWidth(25);
 		
 		mTargetLinePaint = new Paint();
+		mTargetLinePaint.setDither(true);
+		mTargetLinePaint.setStrokeJoin(Paint.Join.ROUND);
+		mTargetLinePaint.setStrokeCap(Paint.Cap.ROUND);
 		mTargetLinePaint.setColor(Color.YELLOW);
 		mTargetLinePaint.setStrokeWidth(7);
 		mTargetLinePaint.setStyle(Style.STROKE);
@@ -97,8 +102,8 @@ public class FirstScenery extends AbstractScenery {
 		Bitmap lightningBitmap = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.lightning_texture);
 		Shader lightningTextureShader = new BitmapShader(lightningBitmap, TileMode.MIRROR, TileMode.MIRROR);
 		mTargetLinePaint.setShader(lightningTextureShader);
+		mTargetLinePaint.setPathEffect(new DashPathEffect(new float[] {20,5}, 0));
 		
-		//mTargetLinePaint.setPathEffect(new DashPathEffect(new float[] {10,20}, 0));
 		mConnectedPaint = new Paint();
 		mConnectedPaint.setColor(Color.BLUE);
 		mConnectedPaint.setStyle(Style.STROKE);

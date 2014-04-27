@@ -39,7 +39,7 @@ public class GameScreen implements Screen {
 	private Animator mAnimator;
 	
 	private final Paint timePaint = new Paint();
-	
+
 	private int mTargetX;
 	private int mTargetY;
 	private int mLevel = 2;
