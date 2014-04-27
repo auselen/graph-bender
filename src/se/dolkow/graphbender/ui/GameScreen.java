@@ -76,7 +76,10 @@ public class GameScreen implements Screen {
 		timePaint.setAntiAlias(true);
 		timePaint.setDither(true);
 		timePaint.setShadowLayer(3, 3, 3, Color.WHITE);
-		
+	}
+	
+	public void restart() {
+		mLevel = 2;
 		createLevel(mLevel);
 		mLevelStartTime = System.nanoTime();
 		mLevelFinishTime = -1;
