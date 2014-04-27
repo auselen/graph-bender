@@ -9,7 +9,7 @@ public class TextGenerator {
 		"Need... hugs...", "Are you even trying?"};
 	private static final String[] WIN_STRINGS = new String[] {
 		"You rock!", "wow!", "Brilliant!", "Excellent!", "Jellyfish love!", "Squee!",
-		"Jiggle jiggle!", "Myup myup!", "Yay, hugs!", "♥ ♥ ♥"};
+		"Jiggle jiggle!", "Myup myup!", "Yay, hugs!", "♥ ♥ ♥", "例える"};
 	
 	public static String lose() {
 		return LOSE_STRINGS[rand.nextInt(LOSE_STRINGS.length)];
