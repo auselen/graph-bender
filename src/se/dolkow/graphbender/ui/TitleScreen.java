@@ -1,6 +1,10 @@
 package se.dolkow.graphbender.ui;
 
+import se.dolkow.graphbender.Globals;
 import se.dolkow.graphbender.Metric;
+import se.dolkow.graphbender.R;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -49,6 +53,15 @@ public class TitleScreen implements Screen {
 	            c.getWidth(), Layout.Alignment.ALIGN_NORMAL, 1, 0, false);
 		
 		c.drawColor(Color.MAGENTA);
+		
+		Bitmap tut1 = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.tut2);
+		Bitmap tut2 = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.tut3);
+		Bitmap tut3 = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.tut1);
+		int tuth = tut1.getHeight();
+		c.drawBitmap(tut1, 0, 0 * tuth, null);
+		c.drawBitmap(tut2, 0, 1 * tuth, null);
+		c.drawBitmap(tut3, 0, 2 * tuth, null);
+		
 		int x = (int) ((w - mPaintTitle.measureText(STR_TITLE)) / 2);
 		int y = h / 2;
 		c.drawText(STR_TITLE, x, y, mPaintTitle);
