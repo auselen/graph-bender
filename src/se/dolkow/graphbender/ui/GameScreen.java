@@ -312,6 +312,7 @@ public class GameScreen implements Screen {
 
 	@Override
     public boolean onBackPressed() {
+		mHandler.removeCallbacksAndMessages(null);
 	    mScreenManager.quitGame();
 	    return true;
     }
