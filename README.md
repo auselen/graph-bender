@@ -1,6 +1,9 @@
-graph-bender
+Jelly Hugs
 ============
 
-Graph Bender: Heart!
+Being a jellyfish isn't easy. You go where the sea takes you, and it's hard to stay in touch with your friends.
 
-which later on turned to be a game about Jellyfish love.
+Some jellyfish need more love than others. Help them get all the hugs they need!
+
+With each level, the number of jellies increase. Complete the nine levels as quickly as you can! 
+
