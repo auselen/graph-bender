@@ -30,9 +30,11 @@ import android.view.MotionEvent;
 public class GameScreen implements Screen {
 
 	private static final long LEVEL_CHANGE_DELAY = 1000;
+	private static final long FAILANIM_DELAY     = 1500;
 	
 	private static final int MSG_RESTART_LEVEL     = 1;
 	private static final int MSG_NEXT_LEVEL        = 2;
+	private static final int MSG_START_FAILANIM    = 3;
 
 	private static final String TAG = "GameScreen";
 
@@ -223,9 +225,8 @@ public class GameScreen implements Screen {
 			}
 			if (!mCurrentLogic.satisfiable()) {
 				mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.lose()));
-				mAnimator = new ScrollAwayAnimator();
-				mLayout = new SingularityLayout(); // TODO: could have a nice initial layout for the restarted level..
-				mHandler.sendEmptyMessageDelayed(MSG_RESTART_LEVEL, LEVEL_CHANGE_DELAY);
+				mHandler.sendEmptyMessageDelayed(MSG_START_FAILANIM, FAILANIM_DELAY);
+				mHandler.sendEmptyMessageDelayed(MSG_RESTART_LEVEL, FAILANIM_DELAY + LEVEL_CHANGE_DELAY);
 			}
 			mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 		}
@@ -266,12 +267,14 @@ public class GameScreen implements Screen {
 			}
 		    switch(msg.what) {
 		    	case MSG_NEXT_LEVEL:
-		    		removeCallbacksAndMessages(null);
 		    		game.createLevel(++game.mLevel);
 		    		break;
 		    	case MSG_RESTART_LEVEL:
-		    		removeCallbacksAndMessages(null);
 		    		game.createLevel(game.mLevel);
+		    		break;
+		    	case MSG_START_FAILANIM:
+		    		game.mAnimator = new ScrollAwayAnimator();
+					game.mLayout = new SingularityLayout();
 		    		break;
 		    	default:
 		    		throw new RuntimeException("Unhandled msg.what: " + msg.what);
