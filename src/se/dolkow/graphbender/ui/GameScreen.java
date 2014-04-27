@@ -9,7 +9,7 @@ import se.dolkow.graphbender.animation.DancingAnimator;
 import se.dolkow.graphbender.animation.NullAnimator;
 import se.dolkow.graphbender.animation.ScrollAwayAnimator;
 import se.dolkow.graphbender.animation.SpiralAnimator;
-import se.dolkow.graphbender.layout.DancingLayout;
+import se.dolkow.graphbender.layout.LineLayout;
 import se.dolkow.graphbender.layout.Layout;
 import se.dolkow.graphbender.layout.PullInRingLayout;
 import se.dolkow.graphbender.layout.SingularityLayout;
@@ -40,7 +40,7 @@ public class GameScreen implements Screen {
 
 	private static final String TAG = "GameScreen";
 
-	public static final int GOAL_LEVEL = 6;
+	public static final int GOAL_LEVEL = 10;
 	
 	private Logic mCurrentLogic;
 	private FirstScenery mCurrentScenery;
@@ -51,7 +51,7 @@ public class GameScreen implements Screen {
 
 	private int mTargetX;
 	private int mTargetY;
-	private int mLevel = 2;
+	private int mLevel;
 	private long mLevelStartTime;
 	private int mHeight;
 	private int mWidth;
@@ -236,7 +236,7 @@ public class GameScreen implements Screen {
 						mScreenManager.addOverlay(new ScalingTextOverlay("Level " + mLevel, true, true));
 						mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.win()));
 					} else {
-						mLayout = new DancingLayout();
+						mLayout = new LineLayout();
 						mAnimator = new DancingAnimator();
 						mLevelFinishTime = System.nanoTime() - mLevelStartTime;
 						mScreenManager.addOverlay(new ScalingTextOverlay("You won! " + mLevelFinishTime, true));
