@@ -6,7 +6,7 @@ public class TextGenerator {
 	private static Random rand = new Random();
 	private static final String[] LOSE_STRINGS = new String[] {
 		"Try Again!", "Come on!", "You can do it!", "duh!", "Nope.", "You monster!",
-		"Need... hugs...", "Are you even trying?", "You suck."};
+		"Need... hugs...", "Are you even trying?"};
 	private static final String[] WIN_STRINGS = new String[] {
 		"You rock!", "wow!", "Brilliant!", "Excellent!", "Jellyfish love!", "Squee!",
 		"Jiggle jiggle!", "Myup myup!", "Yay, hugs!", "♥ ♥ ♥"};
