@@ -7,8 +7,6 @@ import se.dolkow.graphbender.logic.Vertex;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapShader;
-import android.graphics.BlurMaskFilter;
-import android.graphics.BlurMaskFilter.Blur;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.DashPathEffect;
@@ -28,8 +26,9 @@ public class FirstScenery extends AbstractScenery {
 	};
 	private static final Paint[] JELLY_PAINTS;
 	private final Paint mRegularPaint;
-	private final Paint mSelectedPaint;
-	private final Paint mHoveredPaint;
+	private final Paint mPendingOkPaint;
+	private final Paint mPendingMaybePaint;
+	private final Paint mPendingBadPaint;
 	private final Paint mTextPaint;
 	private final Paint mTextPinkPaint;
 	private final Paint mConnectedPaint;
@@ -75,19 +74,18 @@ public class FirstScenery extends AbstractScenery {
 		mTextPinkPaint.setColor(0xFFFFAADD); // that's pink!
 		mTextMargin = mTextPaint.measureText("0") / 2;
 
-		mSelectedPaint = new Paint();
-		mSelectedPaint.setColor(Color.BLUE);
-		mSelectedPaint.setStyle(Style.STROKE);
-		mSelectedPaint.setAntiAlias(true);
-		mSelectedPaint.setPathEffect(new DashPathEffect(new float[] {10,20}, 0));
-		mSelectedPaint.setStrokeWidth(25);
+		mPendingOkPaint = new Paint();
+		mPendingOkPaint.setColor(Color.GREEN);
+		mPendingOkPaint.setStyle(Style.STROKE);
+		mPendingOkPaint.setAntiAlias(true);
+		mPendingOkPaint.setPathEffect(new DashPathEffect(new float[] {10,20}, 0));
+		mPendingOkPaint.setStrokeWidth(25);
 		
-		mHoveredPaint = new Paint();
-		mHoveredPaint.setColor(Color.GREEN);
-		mHoveredPaint.setStyle(Style.STROKE);
-		mHoveredPaint.setAntiAlias(true);
-		mHoveredPaint.setPathEffect(new DashPathEffect(new float[] {10,20}, 0));
-		mHoveredPaint.setStrokeWidth(25);
+		mPendingMaybePaint = new Paint(mPendingOkPaint);
+		mPendingMaybePaint.setColor(Color.YELLOW);
+
+		mPendingBadPaint = new Paint(mPendingOkPaint);
+		mPendingBadPaint.setColor(Color.RED);
 		
 		mTargetLinePaint = new Paint();
 		mTargetLinePaint.setDither(true);
@@ -126,7 +124,7 @@ public class FirstScenery extends AbstractScenery {
 
 	
 	@Override
-    protected void drawVertex(Canvas c, Vertex v) {
+    protected void drawVertex(Canvas c, Vertex v, VertexData vd) {
 		int x = v.x; // + mRand.nextInt(v.required*2+1);
 		int y = v.y; // + mRand.nextInt(v.required*2+1);
 		//c.drawCircle(x, y, Metric.VERTEX_RADIUS,
@@ -139,10 +137,12 @@ public class FirstScenery extends AbstractScenery {
 		int personality = v.hashCode() >> 5;
 		double diff = 5 * Math.sin(personality + time * 0.005);
 		
-		Paint fishPaint = JELLY_PAINTS[personality % JELLY_PAINTS.length];
+		if (vd.selected || vd.hovered) {
+			Paint haloPaint = vd.connectable ? mPendingOkPaint : (vd.unconnectable ? mPendingBadPaint : mPendingMaybePaint);
+			c.drawCircle(x, y, Metric.VERTEX_RADIUS * 1.5f, haloPaint);
+		}
 		
-		if (v.selected || v.hovered)
-			c.drawCircle(x, y, Metric.VERTEX_RADIUS * 1.5f, v.selected ? mSelectedPaint : mHoveredPaint);
+		Paint fishPaint = JELLY_PAINTS[personality % JELLY_PAINTS.length];
 		c.drawBitmap(sprites[1][(personality + spriteI) % 4], x - 48, (int) (y - 48 + diff), fishPaint);
 		c.drawBitmap(sprites[0][(personality + spriteI) % 6], x - 48, (int) (y - 48 + diff), fishPaint);
 		int r = v.getRequired();

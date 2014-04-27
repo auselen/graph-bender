@@ -58,6 +58,10 @@ public class Logic {
 		return connected[id1][id2];
 	}
 	
+	public boolean areConnectable(int id1, int id2) {
+		return vertices[id1].required > 0 && vertices[id2].required > 0 && !areConnected(id1, id2);
+	}
+
 	public ArrayList<Pair<Vertex,Vertex>> getConnectedPairs() {
 		return getConnectedPairs(new ArrayList<Pair<Vertex,Vertex>>());
 	}
@@ -127,4 +131,5 @@ public class Logic {
 		}
 		return true;
 	}
+
 }

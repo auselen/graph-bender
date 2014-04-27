@@ -5,8 +5,6 @@ public class Vertex {
 	public int x, y;
 	public int targetX, targetY;
 	public int required;
-	public boolean selected;
-	public boolean hovered;
 	
 	public Vertex(int id) {
 		this.id = id;

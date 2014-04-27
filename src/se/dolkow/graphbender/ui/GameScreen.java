@@ -103,40 +103,32 @@ public class GameScreen implements Screen {
 			mHovered = 0;
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_BUTTON_L1:
-				mCurrentLogic.getVertex(mSelected).selected = false;
 				mSelected--;
 				if (mSelected < 0)
 					mSelected = mCurrentLogic.getVertexCount() - 1;
 				mTargetX = mCurrentLogic.getVertex(mSelected).x;
 				mTargetY = mCurrentLogic.getVertex(mSelected).y;
-				mCurrentLogic.getVertex(mSelected).selected = true;
 				break;
 			case KeyEvent.KEYCODE_BUTTON_R1:
-				mCurrentLogic.getVertex(mSelected).selected = false;
 				mSelected++;
 				if (mSelected == mCurrentLogic.getVertexCount())
 					mSelected = 0;
 				mTargetX = mCurrentLogic.getVertex(mSelected).x;
 				mTargetY = mCurrentLogic.getVertex(mSelected).y;
-				mCurrentLogic.getVertex(mSelected).selected = true;
 				break;
 			case KeyEvent.KEYCODE_BUTTON_L2:
-				mCurrentLogic.getVertex(mHovered).hovered = false;
 				mHovered--;
 				if (mHovered < 0)
 					mHovered = mCurrentLogic.getVertexCount() - 1;
 				mTargetX = mCurrentLogic.getVertex(mSelected).x;
 				mTargetY = mCurrentLogic.getVertex(mSelected).y;
-				mCurrentLogic.getVertex(mSelected).selected = true;
 				break;
 			case KeyEvent.KEYCODE_BUTTON_R2:
-				mCurrentLogic.getVertex(mSelected).selected = false;
 				mSelected++;
 				if (mSelected == mCurrentLogic.getVertexCount())
 					mSelected = 0;
 				mTargetX = mCurrentLogic.getVertex(mSelected).x;
 				mTargetY = mCurrentLogic.getVertex(mSelected).y;
-				mCurrentLogic.getVertex(mSelected).selected = true;
 				break;
 				/*
 			case KeyEvent.KEYCODE_DPAD_UP:
@@ -173,9 +165,7 @@ public class GameScreen implements Screen {
 			for (int i = 0; i < n; i++) {
 				Vertex v = mCurrentLogic.getVertex(i);
 				if (hits(v, mTargetX, mTargetY)) {
-					if (v.required > 0) {
-						v.selected = true;
-					}
+					mSelected = i;
 					break;
 				}
 			}
@@ -189,35 +179,29 @@ public class GameScreen implements Screen {
 
 	private void moveCheck() {
 		int n = mCurrentLogic.getVertexCount();
+		mHovered = -1;
+		if (mSelected < 0) {
+			return; // nothing to do
+		}
+		int chosenRequired = -1;
 		for (int i = 0; i < n; i++) {
 			Vertex v = mCurrentLogic.getVertex(i);
-			if (hits(v, mTargetX, mTargetY)) {
-				if (v.required > 0)
-					v.hovered = true;
-			} else {
-				v.hovered = false;
+			if (i != mSelected && hits(v, mTargetX, mTargetY)) {
+				if (v.required > chosenRequired) {
+					mHovered = i;
+					chosenRequired = v.required;
+				}
 			}
 		}
 	}
-	private void connectCheck() {
-		final int n = mCurrentLogic.getVertexCount();
-		int selected = -1;
-		int hovered = -1;
-		for (int i = 0; i < n; i++) {
-			Vertex v = mCurrentLogic.getVertex(i);
-			if (v.selected)
-				selected = i;
-			if (v.hovered)
-				hovered = i;
-			v.selected = false;
-			v.hovered = false;
-		}
-		if ((selected != -1) && (hovered != -1)) {
-			mCurrentLogic.connect(selected, hovered);
-			mScreenManager.bzzz();
-			if (mCurrentLogic.satisfied()) {
-				mLayout = new SingularityLayout();
-				if (mLevel < GOAL_LEVEL) {
+	private void dragEnded(boolean connect) {
+		if (connect && mSelected != -1 && mHovered != -1) {
+			if (mCurrentLogic.areConnectable(mSelected, mHovered)) {
+				mScreenManager.bzzz();
+				mCurrentLogic.connect(mSelected, mHovered);
+				if (mCurrentLogic.satisfied()) {
+					mLayout = new SingularityLayout();
+					if (mLevel < GOAL_LEVEL) {
 					mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);
 					mScreenManager.addOverlay(new ScalingTextOverlay("Level " + mLevel, true, true));
 					mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.win()));
@@ -234,11 +218,12 @@ public class GameScreen implements Screen {
 			}
 			mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 		}
+		mSelected = mHovered = -1;
 	}
 
 	@Override
 	public void draw(Canvas c, long frameTime, long deltaTime) {
-		mCurrentScenery.draw(c, mCurrentLogic, mTargetX, mTargetY);
+		mCurrentScenery.draw(c, mCurrentLogic, mTargetX, mTargetY, mSelected, mHovered);
 		c.drawText("" + (mLevel-1) + "@" + ((frameTime - mLevelStartTime)/1000000)/1000.0, 5,
 				Metric.TIMESTAMP_SIZE, timePaint);
 	}
