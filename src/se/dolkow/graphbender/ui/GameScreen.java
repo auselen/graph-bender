@@ -140,9 +140,9 @@ public class GameScreen implements Screen {
 					mSelected = wrap(mHovered+1);
 				break;
 			case KeyEvent.KEYCODE_BUTTON_R2:
-				n = wrap(mHovered-1);
+				n = wrap(mHovered+1);
 				if (n == mSelected)
-					n = wrap(n-1);
+					n = wrap(n+1);
 				mHovered = n;
 				if (mSelected == -1)
 					mSelected = wrap(mHovered+1);
