@@ -145,7 +145,7 @@ public class GameScreen implements Screen {
 				break;
 				*/
 			case KeyEvent.KEYCODE_BUTTON_A:
-				connectCheck();
+				dragEnded(true);
 				break;
 		}
 	}
@@ -167,9 +167,10 @@ public class GameScreen implements Screen {
 					break;
 				}
 			}
-		} else if ((action == MotionEvent.ACTION_UP)
-				|| (action == MotionEvent.ACTION_CANCEL)) {
-			connectCheck();
+		} else if (action == MotionEvent.ACTION_UP) {
+			dragEnded(true);
+		} else if (action == MotionEvent.ACTION_CANCEL) {
+			dragEnded(false);
 		} else if (action == MotionEvent.ACTION_MOVE) {
 			moveCheck();
 		}
@@ -187,7 +188,7 @@ public class GameScreen implements Screen {
 			}
 		}
 	}
-	private void connectCheck() {
+	private void dragEnded(boolean connect) {
 		final int n = mCurrentLogic.getVertexCount();
 		int selected = -1;
 		int hovered = -1;
@@ -200,22 +201,24 @@ public class GameScreen implements Screen {
 			v.selected = false;
 			v.hovered = false;
 		}
-		if ((selected != -1) && (hovered != -1)) {
-			mCurrentLogic.connect(selected, hovered);
-			mScreenManager.bzzz();
-			if (mCurrentLogic.satisfied()) {
-				mLayout = new SingularityLayout();
-				mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);
-				mScreenManager.addOverlay(new ScalingTextOverlay("Level " + mLevel, true, true));
-				mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.win()));
+		if (connect && selected != -1 && hovered != -1) {
+			if (!mCurrentLogic.areConnected(selected, hovered)) {
+				mScreenManager.bzzz();
+				mCurrentLogic.connect(selected, hovered);
+				if (mCurrentLogic.satisfied()) {
+					mLayout = new SingularityLayout();
+					mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);
+					mScreenManager.addOverlay(new ScalingTextOverlay("Level " + mLevel, true, true));
+					mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.win()));
+				}
+				if (!mCurrentLogic.satisfiable()) {
+					mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.lose()));
+					mAnimator = new ScrollAwayAnimator();
+					mLayout = new SingularityLayout(); // TODO: could have a nice initial layout for the restarted level..
+					mHandler.sendEmptyMessageDelayed(MSG_RESTART_LEVEL, LEVEL_CHANGE_DELAY);
+				}
+				mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 			}
-			if (!mCurrentLogic.satisfiable()) {
-				mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.lose()));
-				mAnimator = new ScrollAwayAnimator();
-				mLayout = new SingularityLayout(); // TODO: could have a nice initial layout for the restarted level..
-				mHandler.sendEmptyMessageDelayed(MSG_RESTART_LEVEL, LEVEL_CHANGE_DELAY);
-			}
-			mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 		}
 	}
 

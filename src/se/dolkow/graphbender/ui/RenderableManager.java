@@ -101,7 +101,7 @@ public class RenderableManager {
 	}
 
 	public void bzzz() {
-		mVibrator.vibrate(100);
+		mVibrator.vibrate(50);
 	}
 
 	public void handleKeyDown(int keyCode, KeyEvent event) {
