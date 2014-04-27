@@ -2,6 +2,7 @@ package se.dolkow.graphbender.ui;
 
 import java.lang.ref.WeakReference;
 
+import se.dolkow.graphbender.Globals;
 import se.dolkow.graphbender.Metric;
 import se.dolkow.graphbender.animation.Animator;
 import se.dolkow.graphbender.animation.NullAnimator;
@@ -15,6 +16,7 @@ import se.dolkow.graphbender.logic.Vertex;
 import se.dolkow.graphbender.scene.FirstScenery;
 import se.dolkow.graphbender.scene.backgrounds.PictureBackground;
 import se.dolkow.graphbender.util.TextGenerator;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -192,6 +194,7 @@ public class GameScreen implements Screen {
 			}
 		}
 	}
+
 	private void dragEnded(boolean connect) {
 		if (connect && mSelected != -1 && mHovered != -1) {
 			if (mCurrentLogic.areConnectable(mSelected, mHovered)) {
@@ -206,6 +209,9 @@ public class GameScreen implements Screen {
 					} else {
 						mLevelFinishTime = System.nanoTime() - mLevelStartTime;
 						mScreenManager.addOverlay(new ScalingTextOverlay("You won! " + mLevelFinishTime, true));
+						Editor editor = Globals.sSharedPrefs.edit();
+						editor.putString(Globals.SCORE, "" + mLevelFinishTime);
+						editor.commit();
 					}
 				}
 			}

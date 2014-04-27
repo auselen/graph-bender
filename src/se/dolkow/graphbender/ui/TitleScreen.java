@@ -15,14 +15,13 @@ import android.view.MotionEvent;
 public class TitleScreen implements Screen {
 	private Paint mPaintTitle;
 	private final RenderableManager mScreenManager;
-	private Paint mPaintDesc;
 	private TextPaint mTextPaint;
 	
 	private static final String STR_TITLE = "Jellyfish Hugger";
 	private static final String TAG = "ScreenTitle";
 	private static final String STR_DESC = "give those Jellyfishes some love!\n"
 			+ "you need to reach level " + GameScreen.GOAL_LEVEL + "\n"
-			+ "to save the princess!\n"
+			+ "to save the jellyfish population!\n"
 			+ "\n<tap on screen to begin your quest>";
 	
 	public TitleScreen(RenderableManager screenManager) {
@@ -31,10 +30,6 @@ public class TitleScreen implements Screen {
 		mPaintTitle.setTextSize(Metric.SCALE * 20);
 		mPaintTitle.setTypeface(Typeface.MONOSPACE);
 		mPaintTitle.setColor(Color.WHITE);
-		mPaintDesc = new Paint();
-		mPaintDesc.setTextSize(Metric.SCALE * 16);
-		mPaintDesc.setTypeface(Typeface.SANS_SERIF);
-		mPaintDesc.setColor(Color.WHITE);
 		mScreenManager = screenManager;
 		mTextPaint = new TextPaint();
 		mTextPaint.setColor(Color.WHITE);
