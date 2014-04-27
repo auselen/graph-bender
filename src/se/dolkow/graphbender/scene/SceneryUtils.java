@@ -2,9 +2,12 @@ package se.dolkow.graphbender.scene;
 
 import java.util.Random;
 
+import se.dolkow.graphbender.Metric;
 import android.graphics.Canvas;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PathMeasure;
 
 public class SceneryUtils {
 	private static final Random rand = new Random();
@@ -33,6 +36,10 @@ public class SceneryUtils {
 			if ((xs != xe) || (ys != ye)) {
 				path.lineTo(xe, ye);
 			}
+			PathMeasure measure = new PathMeasure(path, false);
+			float length = measure.getLength() / segments;
+			DashPathEffect effect = new DashPathEffect(new float[] { length, length/5 }, dx*dy);
+			paint.setPathEffect(effect);
 			c.drawPath(path, paint);
 			xs = ax;
 			ys = ay;

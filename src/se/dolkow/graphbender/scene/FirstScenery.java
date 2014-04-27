@@ -79,7 +79,6 @@ public class FirstScenery extends AbstractScenery {
 		mPendingOkPaint.setColor(Color.GREEN);
 		mPendingOkPaint.setStyle(Style.STROKE);
 		mPendingOkPaint.setAntiAlias(true);
-		mPendingOkPaint.setPathEffect(new DashPathEffect(new float[] {10,20}, 10));
 		mPendingOkPaint.setStrokeWidth(25);
 		
 		mPendingMaybePaint = new Paint(mPendingOkPaint);
@@ -89,27 +88,19 @@ public class FirstScenery extends AbstractScenery {
 		mPendingBadPaint.setColor(Color.RED);
 		
 		mTargetLinePaint = new Paint();
-		mTargetLinePaint.setDither(true);
-		mTargetLinePaint.setStrokeJoin(Paint.Join.ROUND);
-		mTargetLinePaint.setStrokeCap(Paint.Cap.ROUND);
 		mTargetLinePaint.setColor(Color.YELLOW);
-		mTargetLinePaint.setStrokeWidth(7);
+		mTargetLinePaint.setStrokeWidth(3 * Metric.SCALE);
 		mTargetLinePaint.setStyle(Style.STROKE);
-		mTargetLinePaint.setAntiAlias(true);
-		mTargetLinePaint.setAlpha(200);
-		mTargetLinePaint.setShadowLayer(3, 3, 3, Color.BLACK);
 		Bitmap lightningBitmap = BitmapFactory.decodeResource(Globals.sAppResources, R.drawable.lightning_texture);
 		Shader lightningTextureShader = new BitmapShader(lightningBitmap, TileMode.MIRROR, TileMode.MIRROR);
 		mTargetLinePaint.setShader(lightningTextureShader);
-		mTargetLinePaint.setPathEffect(new DashPathEffect(new float[] {20,5}, 0));
 		
 		mConnectedPaint = new Paint();
 		mConnectedPaint.setColor(Color.BLUE);
+		mConnectedPaint.setStrokeWidth(3 * Metric.SCALE);
 		mConnectedPaint.setStyle(Style.STROKE);
 		mConnectedPaint.setShader(lightningTextureShader);
-		mConnectedPaint.setStrokeWidth(7);
-		mConnectedPaint.setAntiAlias(true);
-		mConnectedPaint.setShadowLayer(3, 3, 3, Color.BLACK);
+
 		mTime = System.currentTimeMillis();
 		
 		mHaloLength = (float) (Math.pow(Metric.VERTEX_RADIUS * 1.5f, 2) * Math.PI) / 500;
