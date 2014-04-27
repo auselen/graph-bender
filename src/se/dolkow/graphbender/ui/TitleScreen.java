@@ -10,6 +10,7 @@ import android.text.Layout;
 import android.text.StaticLayout;
 import android.text.TextPaint;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 public class TitleScreen implements Screen {
@@ -58,8 +59,12 @@ public class TitleScreen implements Screen {
 	}
 	
 	@Override
-	public void handleKeyDown(int keyCode, android.view.KeyEvent event) {
-		mScreenManager.startGame();
+	public boolean handleKeyDown(int keyCode, android.view.KeyEvent event) {
+		if (keyCode != KeyEvent.KEYCODE_BACK) {
+			mScreenManager.startGame();
+			return true;
+		}
+		return false;
 	};
 
 	@Override

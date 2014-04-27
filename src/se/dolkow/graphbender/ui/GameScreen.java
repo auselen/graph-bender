@@ -106,7 +106,7 @@ public class GameScreen implements Screen {
 	}
 	
 	@Override
-	public void handleKeyDown(int keyCode, android.view.KeyEvent event) {
+	public boolean handleKeyDown(int keyCode, android.view.KeyEvent event) {
 		Log.d(TAG, "key down " + keyCode + " " + event);
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_BUTTON_L1:
@@ -150,7 +150,13 @@ public class GameScreen implements Screen {
 			case KeyEvent.KEYCODE_BUTTON_A:
 				dragEnded(true);
 				break;
+			case KeyEvent.KEYCODE_BACK:
+				mScreenManager.backPressed();
+				break;
+			default:
+				return false;
 		}
+		return true;
 	}
 	
 	@Override

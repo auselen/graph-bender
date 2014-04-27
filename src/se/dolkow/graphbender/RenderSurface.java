@@ -2,6 +2,7 @@ package se.dolkow.graphbender;
 
 import se.dolkow.graphbender.ui.RenderableManager;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.os.Vibrator;
@@ -12,13 +13,13 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 @SuppressLint("ViewConstructor")
-public class RenderSurface extends SurfaceView implements SurfaceHolder.Callback{
+public class RenderSurface extends SurfaceView implements SurfaceHolder.Callback {
 	private final RenderableManager mScreenManager;
 	private boolean mSurfaceAvailable;
 	private final Choreographer choreographer;
 	private final FrameCallback frameCallback;
-
-	public RenderSurface(Context context, RenderableManager sman) {
+	
+	public RenderSurface(Activity context, RenderableManager sman) {
 		super(context);
 		
 		choreographer = Choreographer.getInstance();
@@ -29,7 +30,7 @@ public class RenderSurface extends SurfaceView implements SurfaceHolder.Callback
 		
 		Vibrator bzzz = (Vibrator) context.getSystemService(Context.VIBRATOR_SERVICE);
 		mScreenManager.registerVibrator(bzzz);
-		
+
 		setFocusable(true);
 		setFocusableInTouchMode(true);
 		requestFocus();
@@ -37,8 +38,7 @@ public class RenderSurface extends SurfaceView implements SurfaceHolder.Callback
 	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		mScreenManager.handleKeyDown(keyCode, event);
-		return true;
+		return mScreenManager.handleKeyDown(keyCode, event);
 	}
 	
 	@Override

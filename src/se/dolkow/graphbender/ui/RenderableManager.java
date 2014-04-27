@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 import android.graphics.Canvas;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
 public class RenderableManager {
 
+	private static final String TAG = "RenderableManager";
 	private final TitleScreen mTitleScreen;
 	private final GameScreen mGameScreen;
 	
@@ -104,8 +106,11 @@ public class RenderableManager {
 		mVibrator.vibrate(50);
 	}
 
-	public void handleKeyDown(int keyCode, KeyEvent event) {
-		mActiveScreen.handleKeyDown(keyCode, event);
+	public boolean handleKeyDown(int keyCode, KeyEvent event) {
+		Log.d(TAG, "keydown " + keyCode + " " + event);
+		return mActiveScreen.handleKeyDown(keyCode, event);
 	}
-	
+
+	public void quitGame() {
+	}	
 }

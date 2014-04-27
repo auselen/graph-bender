@@ -10,5 +10,8 @@ interface Screen extends Renderable {
 	/** Update state for the next frame */
 	public void update(long frameTime, long deltaTime);
 
-	public void handleKeyDown(int keyCode, KeyEvent event);
+	/**
+	 * @return true if the event was handled
+	 */
+	public boolean handleKeyDown(int keyCode, KeyEvent event);
 }
