@@ -5,9 +5,11 @@ import java.lang.ref.WeakReference;
 import se.dolkow.graphbender.Globals;
 import se.dolkow.graphbender.Metric;
 import se.dolkow.graphbender.animation.Animator;
+import se.dolkow.graphbender.animation.DancingAnimator;
 import se.dolkow.graphbender.animation.NullAnimator;
 import se.dolkow.graphbender.animation.ScrollAwayAnimator;
 import se.dolkow.graphbender.animation.SpiralAnimator;
+import se.dolkow.graphbender.layout.DancingLayout;
 import se.dolkow.graphbender.layout.Layout;
 import se.dolkow.graphbender.layout.PullInRingLayout;
 import se.dolkow.graphbender.layout.SingularityLayout;
@@ -38,7 +40,7 @@ public class GameScreen implements Screen {
 
 	private static final String TAG = "GameScreen";
 
-	public static final int GOAL_LEVEL = 5;
+	public static final int GOAL_LEVEL = 6;
 	
 	private Logic mCurrentLogic;
 	private FirstScenery mCurrentScenery;
@@ -228,12 +230,14 @@ public class GameScreen implements Screen {
 				mScreenManager.bzzz();
 				mCurrentLogic.connect(mSelected, mHovered);
 				if (mCurrentLogic.satisfied()) {
-					mLayout = new SingularityLayout();
 					if (mLevel < GOAL_LEVEL) {
+						mLayout = new SingularityLayout();
 						mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);
 						mScreenManager.addOverlay(new ScalingTextOverlay("Level " + mLevel, true, true));
 						mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.win()));
 					} else {
+						mLayout = new DancingLayout();
+						mAnimator = new DancingAnimator();
 						mLevelFinishTime = System.nanoTime() - mLevelStartTime;
 						mScreenManager.addOverlay(new ScalingTextOverlay("You won! " + mLevelFinishTime, true));
 						Editor editor = Globals.sSharedPrefs.edit();
@@ -255,8 +259,13 @@ public class GameScreen implements Screen {
 	@Override
 	public void draw(Canvas c, long frameTime, long deltaTime) {
 		mCurrentScenery.draw(c, mCurrentLogic, mTargetX, mTargetY, mSelected, mHovered);
-		c.drawText("" + (mLevel-1) + "@" + ((frameTime - mLevelStartTime)/1000000)/1000.0, 5,
+		double time = ((frameTime - mLevelStartTime)/1000000)/1000.0;
+		if (mLevelFinishTime > 0) {
+			time = mLevelFinishTime;
+		}
+		c.drawText("" + time, 5, 
 				Metric.TIMESTAMP_SIZE, timePaint);
+		c.drawText("Level: " + (mLevel-1) , 5, Metric.TIMESTAMP_SIZE * 2 + 10, timePaint);
 	}
 
 	@Override
