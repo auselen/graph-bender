@@ -93,42 +93,39 @@ public class GameScreen implements Screen {
 	public void update(long frameTime, long timeDeltaNano) {
 		mAnimator.update(mCurrentLogic, timeDeltaNano);
 	}
-
+	
+	private int wrap(int val) {
+		final int N = mCurrentLogic.getVertexCount(); 
+		val = val % N;
+		if (val < 0) {
+			val += N;
+		}
+		return val;
+	}
+	
 	@Override
 	public void handleKeyDown(int keyCode, android.view.KeyEvent event) {
 		Log.d(TAG, "key down " + keyCode + " " + event);
-		if (mSelected == -1)
-			mSelected = 0;
-		if (mHovered == -1)
-			mHovered = 0;
 		switch (keyCode) {
 			case KeyEvent.KEYCODE_BUTTON_L1:
-				mSelected--;
-				if (mSelected < 0)
-					mSelected = mCurrentLogic.getVertexCount() - 1;
+				mSelected = wrap(mSelected-1);
 				mTargetX = mCurrentLogic.getVertex(mSelected).x;
 				mTargetY = mCurrentLogic.getVertex(mSelected).y;
 				break;
 			case KeyEvent.KEYCODE_BUTTON_R1:
-				mSelected++;
-				if (mSelected == mCurrentLogic.getVertexCount())
-					mSelected = 0;
+				mSelected = wrap(mSelected+1);
 				mTargetX = mCurrentLogic.getVertex(mSelected).x;
 				mTargetY = mCurrentLogic.getVertex(mSelected).y;
 				break;
 			case KeyEvent.KEYCODE_BUTTON_L2:
-				mHovered--;
-				if (mHovered < 0)
-					mHovered = mCurrentLogic.getVertexCount() - 1;
-				mTargetX = mCurrentLogic.getVertex(mSelected).x;
-				mTargetY = mCurrentLogic.getVertex(mSelected).y;
+				mHovered = wrap(mHovered-1);
+				mTargetX = mCurrentLogic.getVertex(mHovered).x;
+				mTargetY = mCurrentLogic.getVertex(mHovered).y;
 				break;
 			case KeyEvent.KEYCODE_BUTTON_R2:
-				mSelected++;
-				if (mSelected == mCurrentLogic.getVertexCount())
-					mSelected = 0;
-				mTargetX = mCurrentLogic.getVertex(mSelected).x;
-				mTargetY = mCurrentLogic.getVertex(mSelected).y;
+				mHovered = wrap(mHovered+1);
+				mTargetX = mCurrentLogic.getVertex(mHovered).x;
+				mTargetY = mCurrentLogic.getVertex(mHovered).y;
 				break;
 				/*
 			case KeyEvent.KEYCODE_DPAD_UP:
