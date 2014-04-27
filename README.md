@@ -7,3 +7,8 @@ Some jellyfish need more love than others. Help them get all the hugs they need!
 
 With each level, the number of jellies increase. Complete the nine levels as quickly as you can! 
 
+![alt tag](docs/tut1.png)
+
+![alt tag](docs/tut2.png)
+
+![alt tag](docs/tut3.png)
