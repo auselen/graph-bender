@@ -259,10 +259,13 @@ public class GameScreen implements Screen {
 	@Override
 	public void draw(Canvas c, long frameTime, long deltaTime) {
 		mCurrentScenery.draw(c, mCurrentLogic, mTargetX, mTargetY, mSelected, mHovered);
-		double time = ((frameTime - mLevelStartTime)/1000000)/1000.0;
+		double time;
 		if (mLevelFinishTime > 0) {
 			time = mLevelFinishTime;
+		} else {
+			time = frameTime - mLevelStartTime;
 		}
+		time = ((long)time/1000000)/1000.0;
 		c.drawText("" + time, 5, 
 				Metric.TIMESTAMP_SIZE, timePaint);
 		c.drawText("Level: " + (mLevel-1) , 5, Metric.TIMESTAMP_SIZE * 2 + 10, timePaint);
