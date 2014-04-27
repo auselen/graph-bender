@@ -111,25 +111,37 @@ public class GameScreen implements Screen {
 	public boolean handleKeyDown(int keyCode, android.view.KeyEvent event) {
 		Log.d(TAG, "key down " + keyCode + " " + event);
 		switch (keyCode) {
-			case KeyEvent.KEYCODE_BUTTON_L1:
-				mSelected = wrap(mSelected-1);
-				mTargetX = mCurrentLogic.getVertex(mSelected).x;
-				mTargetY = mCurrentLogic.getVertex(mSelected).y;
+			case KeyEvent.KEYCODE_BUTTON_L1: 
+				int n = wrap(mSelected-1);
+				if (n == mHovered)
+					n = wrap(n-1);
+				mSelected = n;
+				if (mHovered == -1)
+					mHovered = wrap(mSelected+1);
 				break;
 			case KeyEvent.KEYCODE_BUTTON_R1:
-				mSelected = wrap(mSelected+1);
-				mTargetX = mCurrentLogic.getVertex(mSelected).x;
-				mTargetY = mCurrentLogic.getVertex(mSelected).y;
+				n = wrap(mSelected+1);
+				if (n == mHovered)
+					n = wrap(n+1);
+				mSelected = n;
+				if (mHovered == -1)
+					mHovered = wrap(mSelected+1);
 				break;
 			case KeyEvent.KEYCODE_BUTTON_L2:
-				mHovered = wrap(mHovered-1);
-				mTargetX = mCurrentLogic.getVertex(mHovered).x;
-				mTargetY = mCurrentLogic.getVertex(mHovered).y;
+				n = wrap(mHovered-1);
+				if (n == mSelected)
+					n = wrap(n-1);
+				mHovered = n;
+				if (mSelected == -1)
+					mSelected = wrap(mHovered+1);
 				break;
 			case KeyEvent.KEYCODE_BUTTON_R2:
-				mHovered = wrap(mHovered+1);
-				mTargetX = mCurrentLogic.getVertex(mHovered).x;
-				mTargetY = mCurrentLogic.getVertex(mHovered).y;
+				n = wrap(mHovered-1);
+				if (n == mSelected)
+					n = wrap(n-1);
+				mHovered = n;
+				if (mSelected == -1)
+					mSelected = wrap(mHovered+1);
 				break;
 				/*
 			case KeyEvent.KEYCODE_DPAD_UP:
@@ -157,6 +169,11 @@ public class GameScreen implements Screen {
 				break;
 			default:
 				return false;
+		}
+		if (mHovered != -1) {
+			Vertex hovered = mCurrentLogic.getVertex(mHovered);
+			mTargetX = hovered.x;
+			mTargetY = hovered.y;
 		}
 		return true;
 	}

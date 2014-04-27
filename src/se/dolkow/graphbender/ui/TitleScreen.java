@@ -18,7 +18,7 @@ public class TitleScreen implements Screen {
 	private final RenderableManager mScreenManager;
 	private TextPaint mTextPaint;
 	
-	private static final String STR_TITLE = "Jellyfish Hugger";
+	private static final String STR_TITLE = "Jelly Hugs";
 	private static final String TAG = "ScreenTitle";
 	private static final String STR_DESC = "give those Jellyfishes some love!\n"
 			+ "you need to reach level " + GameScreen.GOAL_LEVEL + "\n"
@@ -28,7 +28,7 @@ public class TitleScreen implements Screen {
 	public TitleScreen(RenderableManager screenManager) {
 		Log.d(TAG, "ScreenTitle");
 		mPaintTitle = new Paint();
-		mPaintTitle.setTextSize(Metric.SCALE * 20);
+		mPaintTitle.setTextSize(Metric.SCALE * 40);
 		mPaintTitle.setTypeface(Typeface.MONOSPACE);
 		mPaintTitle.setColor(Color.WHITE);
 		mScreenManager = screenManager;
