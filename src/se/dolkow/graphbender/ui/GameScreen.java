@@ -18,6 +18,7 @@ import se.dolkow.graphbender.util.TextGenerator;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -32,6 +33,8 @@ public class GameScreen implements Screen {
 	private static final int MSG_NEXT_LEVEL        = 2;
 
 	private static final String TAG = "GameScreen";
+
+	public static final int GOAL_LEVEL = 5;
 	
 	private Logic mCurrentLogic;
 	private FirstScenery mCurrentScenery;
@@ -54,6 +57,8 @@ public class GameScreen implements Screen {
 	private int mSelected;
 
 	private int mHovered;
+
+	private long mLevelFinishTime;
 	
 	public GameScreen(RenderableManager screenManager) {
 		super();
@@ -61,14 +66,21 @@ public class GameScreen implements Screen {
 		mCurrentScenery = new FirstScenery();
 		mScreenManager = screenManager;
 		
-		timePaint.setColor(Color.CYAN);
+		timePaint.setColor(Color.YELLOW);
 		timePaint.setTextSize(Metric.TIMESTAMP_SIZE);
+		timePaint.setTypeface(Typeface.MONOSPACE);
+		timePaint.setAntiAlias(true);
+		timePaint.setDither(true);
+		timePaint.setShadowLayer(3, 3, 3, Color.WHITE);
 		
 		createLevel(mLevel);
+		mLevelStartTime = System.nanoTime();
+		mLevelFinishTime = -1;
 	}
+
 	public void createLevel(int n) {
 		mCurrentLogic = new Logic(n);
-		mLevelStartTime = System.nanoTime();
+		
 		mLayout.updateDesiredPositions(mCurrentLogic, mWidth, mHeight);
 		new NullAnimator().update(mCurrentLogic, 0);
 		mAnimator = new SpiralAnimator();
@@ -205,9 +217,14 @@ public class GameScreen implements Screen {
 			mScreenManager.bzzz();
 			if (mCurrentLogic.satisfied()) {
 				mLayout = new SingularityLayout();
-				mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);
-				mScreenManager.addOverlay(new ScalingTextOverlay("Level " + mLevel, true, true));
-				mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.win()));
+				if (mLevel < GOAL_LEVEL) {
+					mHandler.sendEmptyMessageDelayed(MSG_NEXT_LEVEL, LEVEL_CHANGE_DELAY);
+					mScreenManager.addOverlay(new ScalingTextOverlay("Level " + mLevel, true, true));
+					mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.win()));
+				} else {
+					mLevelFinishTime = System.nanoTime() - mLevelStartTime;
+					mScreenManager.addOverlay(new ScalingTextOverlay("You won! " + mLevelFinishTime, true));
+				}
 			}
 			if (!mCurrentLogic.satisfiable()) {
 				mScreenManager.addOverlay(OverlayFactory.getRandom(TextGenerator.lose()));
@@ -222,7 +239,8 @@ public class GameScreen implements Screen {
 	@Override
 	public void draw(Canvas c, long frameTime, long deltaTime) {
 		mCurrentScenery.draw(c, mCurrentLogic, mTargetX, mTargetY);
-		c.drawText("" + ((frameTime - mLevelStartTime)/1000000)/1000.0, 5, Metric.TIMESTAMP_SIZE, timePaint);
+		c.drawText("" + (mLevel-1) + "@" + ((frameTime - mLevelStartTime)/1000000)/1000.0, 5,
+				Metric.TIMESTAMP_SIZE, timePaint);
 	}
 
 	@Override

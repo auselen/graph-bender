@@ -11,7 +11,7 @@ public class Metric {
 		SCALE = scale;
 		VERTEX_RADIUS = 25 * scale;
 		FINGER_SIZE = 30 * scale;
-		TIMESTAMP_SIZE = 16 * scale;
+		TIMESTAMP_SIZE = 25 * scale;
 		VERTEX_TEXT_SIZE = 25 * scale;
 	}
 }
